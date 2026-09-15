@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "adaptive-learning-substrate"
+version = "0.1.0"
+description = "Deterministic Stage-1 simulator for local causal credit experiments"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.26", "threadpoolctl>=3.6"]
+
+[project.optional-dependencies]
+test = ["pytest>=9,<10", "ruff>=0.16,<0.17"]
+
+[project.scripts]
+als-run = "adaptive_learning_substrate.cli:main"
+als-exp000 = "adaptive_learning_substrate.experiment_000:main"
+als-exp000-diagnostic = "adaptive_learning_substrate.experiment_000_diagnostics:main"
+als-exp000-alignment = "adaptive_learning_substrate.experiment_000_alignment:main"
+als-exp000-memory-sweep = "adaptive_learning_substrate.experiment_000_memory_sweep:main"
+als-validate-artifacts = "adaptive_learning_substrate.artifact_validation:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+adaptive_learning_substrate = ["_frozen_sources/*.snapshot"]
+
+[tool.pytest.ini_options]
+addopts = "-ra -p no:cacheprovider"
+pythonpath = ["src"]
+testpaths = ["tests"]

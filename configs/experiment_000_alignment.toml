@@ -1,0 +1,74 @@
+# Preregistered fixed-event-DAG alignment diagnostic. Custom seeds only.
+
+[protocol]
+name = "experiment_000_update_alignment"
+version = "alignment-v1"
+mechanism = "CCF-v0"
+implementation_revision = "C000.1"
+scope = "custom_seed_diagnostic"
+confirmatory = false
+
+[execution]
+enabled = true
+required_seed_role = "custom"
+seeds = [42, 43, 44, 45, 46]
+episodes_per_seed = 20
+smoke_episodes_per_seed = 2
+confirmatory_seeds_allowed = false
+
+[data]
+noise_events = 8
+terminal_feedback_only = true
+query_event_tick = 9
+forced_output_tick = 11
+
+[graph]
+hidden_count = 64
+recurrent_in_degree = 8
+input_fan_out = 8
+output_fan_in = 16
+edge_delay_ticks = 1
+query_readout_latency_ticks = 2
+initial_weight_scale = 0.35
+topology_frozen = true
+
+[ccf]
+activation = "tanh"
+float_type = "float64"
+emit_threshold = 1e-3
+learning_rate = 0.01
+trace_decay = 0.97
+route_gain = 0.90
+credit_limit = 1.0
+max_update = 0.05
+weight_clip = 3.0
+trace_horizon = 32
+hop_limit = 16
+epsilon_weight = 1e-12
+epsilon_message = 1e-12
+epsilon_route = 1e-12
+credit_minimum = 1e-8
+
+[alignment]
+loss = "half_squared_bipolar_error"
+root_adapter = "clip_target_minus_activation_to_unit_interval"
+hold_emission_gates_fixed = true
+finite_difference_step = 1e-6
+finite_difference_coordinates_per_episode = 32
+finite_difference_absolute_tolerance = 1e-7
+finite_difference_relative_tolerance = 1e-4
+minimum_gate_stable_fraction = 0.80
+minimum_derivative_pass_fraction = 0.99
+equal_norm_epsilon = 1e-30
+edge_groups = ["cue", "noise", "query", "recurrent", "output"]
+
+[interpretation]
+direction_plausible_median_cosine_min = 0.50
+direction_plausible_positive_dot_fraction_min = 0.80
+result_is_mechanism_pass = false
+
+[output]
+directory = "artifacts/experiment_000/alignment"
+write_episode_rows = true
+write_finite_difference_rows = true
+write_provenance = true

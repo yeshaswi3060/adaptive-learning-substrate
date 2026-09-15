@@ -1,0 +1,791 @@
+protocol_version = "experiment-000-lwoh-l1-v3"
+protocol_path = "docs/EXPERIMENT_000_LWOH_L1_V3_PROTOCOL.md"
+protocol_sha256 = "c05a474638fc0f6319942a64e7dfae945f82b9b55a8df7ee9dd998861371b31c"
+status = "prospective_post_a3_pre_metric_v3"
+claim_level = "custom_seed_development_only"
+
+[trigger]
+required_predecessor = "A3_NO_SELECTION"
+required_a3_terminal_path = "artifacts/experiment_000/readout_trace_a3/DETERMINISM_VERIFICATION.json"
+required_a3_terminal_sha256 = "bca71de64cab5ef2f167e5a6e23de4b05bf66722f62fb7cf2d0fa71a85d2e464"
+required_a3_deterministic_payload_sha256 = "beb1b140347d572d5418e9cf586d1709fd6366f474917708c00e000f4ca17747"
+v2_execution_authority = false
+v2_status = "INVALIDATED_SOURCE_DRIFT_NO_METRICS"
+require_v2_activation_absent = true
+require_v2_official_metrics_absent = true
+require_repaired_lineage_handoff = true
+lineage_handoff_path = "artifacts/evidence_integrity_repair_2026-09-04/PRE_METRIC_LINEAGE.json"
+lineage_handoff_sha256 = "072f35110cc234abb12851cb67876c7a4e5f715cec8bc559195ddab73541d30b"
+lineage_handoff_payload_field = "lineage_payload_sha256"
+lineage_handoff_payload_sha256 = "3b54878cca73210218494499f1e68ce628e09d2c057c811fc766b437cc8a21d4"
+lineage_handoff_sidecar_path = "artifacts/evidence_integrity_repair_2026-09-04/PRE_METRIC_LINEAGE.sha256"
+lineage_handoff_sidecar_sha256 = "83701e1aac04e28952479c9668bb02526f3fe9c8827cb2f2151ebe8e03c34215"
+repaired_source_manifest_sha256 = "327234214bbaded98d98b9a7bf671eb263a008a18264f1b7319d47d2bf4c87f5"
+validator_import_closure_sha256 = "dfe6d44343dc85790da1724c41fd41e7c4e22458faa44ca7d221a8eebfe52067"
+assigned_seeds_reaffirmed_unused = true
+design_may_read_assigned_seed_metrics = false
+require_primary_sidecar = true
+require_rerun_sidecar = true
+require_separate_process = true
+require_canonical_payload_equality = true
+require_phase_and_source_integrity = true
+[seed_partition]
+admission = [90, 91, 92, 93, 94]
+learning = [95, 96, 97, 98, 99, 100, 101, 102, 103, 104]
+scratch = [9090, 9091]
+forbidden_development = [0, 1, 2, 3, 4]
+forbidden_alignment = [42, 43, 44, 45, 46]
+forbidden_memory_sweep = [50, 51, 52, 53, 54]
+forbidden_slow_state = [60, 61, 62, 63, 64]
+forbidden_invalid_a1 = [65, 66, 67, 68, 69]
+forbidden_a2 = [70, 71, 72, 73, 74]
+forbidden_a2_selected_branch = [75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89]
+forbidden_confirmatory = [1000, 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016, 1017, 1018, 1019]
+required_role = "custom"
+
+[graph]
+hidden_count = 64
+recurrent_in_degree = 8
+input_fan_out = 8
+output_fan_in = 16
+initial_weight_scale = 0.35
+edge_delay_ticks = 1
+query_readout_latency_ticks = 2
+activation = "tanh"
+emit_threshold = 0.001
+dtype = "float64"
+device = "cpu"
+autograd = false
+gpu = false
+ccf_calls = 0
+topology_frozen = true
+weights_frozen = true
+
+[memory]
+name = "local_write_once_hard_expiring_latch"
+condition = "write_once_ttl32"
+selected_nodes = "lexically_ordered_destinations_of_input_cue_edges"
+feature_dimension = 8
+state_floats = 8
+state_ticks = 8
+state_bits = 8
+initial_m = 0.0
+initial_kappa = 0
+initial_b = 0
+gate_equation = "g_i(t)=1-b_i"
+value_equation = "m_i=clip(g_i(t)*a_i(t)+(1-g_i(t))*m_i,-1,+1)"
+tick_equation = "kappa_i=g_i(t)*t+(1-g_i(t))*kappa_i"
+written_equation = "b_i=1"
+effective_equation = "z_i(T)=m_i iff b_i=1 and 0<=T-kappa_i<=32 else +0.0"
+hard_horizon_ticks = 32
+maximum_official_query_age_ticks = 18
+horizon_derivation = "smallest_power_of_two_strictly_above_18"
+touch_only_on_real_hidden_evaluation = true
+read_only_at_query = true
+enters_recurrent_dynamics = false
+creates_events_or_messages = false
+crosses_episode_boundary = false
+
+[admission]
+seeds = [90, 91, 92, 93, 94]
+distractors = 8
+pairs_per_split = 100
+counterfactual_cues = [-1, 1]
+ridge_alpha = 0.001
+candidate_feature = "lwoh_8d"
+native_feature = "latest_activation_same_8_nodes"
+candidate_output_equation = "tanh(sum_i input_cue_weight_i*z_i)"
+native_output = "ordinary_forced_output"
+candidate_grid_size = 1
+online_learning = false
+zero_guard = "positive_over_zero_passes_ratio_by_cross_multiplication;zero_over_zero_fails"
+terminal_pass = "LWOH_ADMITTED:write_once_ttl32"
+terminal_fail_prefix = "LWOH_ADMISSION_FAIL:"
+require_primary_and_rerun = true
+require_canonical_payload_equality = true
+
+[admission.gates]
+A01_median_c_multiple_min = 3.0
+A02_seed_c_multiple_min = 3.0
+A02_seed_count_min = 4
+A03_median_ratio_min = 0.50
+A04_median_ratio_multiple_min = 3.0
+A05_seed_ratio_multiple_min = 3.0
+A05_seed_count_min = 4
+A06_median_ridge_eval_accuracy_min = 0.70
+A07_median_output_cue_delta_to_sd_min = 0.50
+A08_split_event_ratio_max = 1.10
+A08_split_forward_touch_ratio_max = 1.10
+A08_episode_event_ratio_max = 1.15
+A08_episode_forward_touch_ratio_max = 1.15
+A09_blank_tail_start_tick = 193
+A09_blank_tail_end_tick = 256
+A09_hidden_emissions_required = 0
+A09_effective_state_abs_max = 0.0
+A09_wake_feature_half_difference_l2_max = 0.001
+A09_wake_output_half_difference_abs_max = 0.001
+A10_all_integrity_required = true
+
+[learner]
+condition = "lwoh_head"
+parameters = 8
+bias_parameters = 0
+initial_theta = 0.0
+prediction_equation = "q=tanh(theta^T*z)"
+tie_prediction = 1
+loss_equation = "0.5*(y-q)^2"
+normalizer_equation = "max(1,||z||^2)"
+learning_rate = 0.5
+delta_coordinate_clip = 0.05
+theta_coordinate_clip = 3.0
+target_encoding = "bipolar_-1_+1"
+target_available_before_prediction = false
+passes_per_training_stream = 1
+replay = false
+
+[head_alignment_tests]
+coordinates = 8
+central_difference_absolute_tolerance = 1e-8
+central_difference_relative_tolerance = 1e-6
+cosine_min = 0.999999
+positive_descent_dot_fraction = 1.0
+official_task_metrics = false
+
+[conditions]
+ordered = ["lwoh_head", "latest_head", "lwoh_independent_label", "frozen_lwoh_head", "rand", "ridge_lwoh", "ridge_latest", "visible_cue_hold"]
+primary_compute_matched_baseline = "latest_head"
+latest_gate_equation = "g_i(t)=1"
+independent_labels_exactly_balanced = true
+frozen_theta = 0.0
+ridge_alpha = 0.001
+visible_cue_hold_role = "transparent_nonlearning_task_ceiling"
+visible_cue_hold_in_superiority_comparisons = false
+
+[data]
+train_cell = "d8_clean_train"
+train_distractors = 8
+train_examples = 512
+all_streams_exactly_balanced = true
+cell_namespaced_rng = true
+rng = "numpy.random.PCG64"
+seed_derivation = "first_128_bits_SHA256(protocol_version|master_seed|cell|split|purpose)"
+analysis_seed = 2026090302
+target = "cue"
+target_stored_separately = true
+
+[[data.eval_cells]]
+name = "d8_clean_eval"
+distractors = 8
+cue_visible = true
+examples = 512
+
+[[data.eval_cells]]
+name = "d4_clean_eval"
+distractors = 4
+cue_visible = true
+examples = 256
+
+[[data.eval_cells]]
+name = "d16_clean_eval"
+distractors = 16
+cue_visible = true
+examples = 256
+
+[[data.eval_cells]]
+name = "d8_cue_removed_eval"
+distractors = 8
+cue_visible = false
+cue_event = "exact_empty_tick"
+examples = 256
+
+[scratch]
+seeds = [9090, 9091]
+train_examples_max = 8
+eval_examples_per_cell_max = 8
+canonical_paths_forbidden = true
+selecting = false
+
+[learning_gates.primary]
+P01_d8_mean_accuracy_min = 0.75
+P02_d8_seed_accuracy_min = 0.70
+P02_seed_count_min = 8
+P03_advantage_vs_frozen_min = 0.20
+P03_advantage_vs_latest_min = 0.10
+P03_advantage_vs_independent_label_min = 0.15
+P04_max_gap_below_ridge_lwoh = 0.05
+
+[learning_gates.statistics]
+independent_unit = "seed"
+contrasts = ["lwoh_minus_frozen", "lwoh_minus_latest", "lwoh_minus_independent_label"]
+exact_sign_flip_assignments = 1024
+one_sided = true
+holm_family_size = 3
+holm_adjusted_p_strict_max = 0.05
+bootstrap_replicates = 20000
+bootstrap_seed = 2026090302
+confidence_level = 0.95
+all_lower_bounds_strictly_positive = true
+
+[learning_gates.robustness]
+R01_d4_mean_accuracy_min = 0.75
+R01_d16_mean_accuracy_min = 0.65
+R02_seed_accuracy_min = 0.60
+R02_seed_count_min = 8
+R03_d16_drop_from_d8_max = 0.15
+R04_cue_removed_accuracy_min = 0.45
+R04_cue_removed_accuracy_max = 0.55
+R05_independent_label_accuracy_min = 0.45
+R05_independent_label_accuracy_max = 0.55
+R05_frozen_accuracy_min = 0.45
+R05_frozen_accuracy_max = 0.55
+
+[control_integrity]
+visible_cue_hold_clean_accuracy = 1.0
+visible_cue_hold_removed_accuracy = 0.5
+training_updates_per_trainable_head = 512
+evaluation_updates = 0
+true_label_heads_must_change_from_zero = true
+prediction_before_target_reveal = true
+one_pass_no_replay = true
+
+[compute]
+worker_processes = 5
+parent_blas_threads = 1
+worker_blas_threads = 1
+ordered_seed_results = true
+require_unique_fresh_processes = true
+same_native_forwards = true
+same_event_and_activation_identities = true
+same_graph_edge_touches = true
+same_observer_kernel_calls = true
+same_state_bytes = true
+same_feature_reads = 8
+same_head_parameters = 8
+same_head_dot_product_coordinates = 8
+same_training_update_coordinates = 8
+report_wall_time = true
+report_peak_memory = true
+
+[integrity]
+finite_values = true
+memory_bound_abs = 1.0
+write_once_per_selected_unit = true
+hard_expiry_required = true
+episode_reset_required = true
+lexical_feature_order_required = true
+feature_dimension = 8
+native_event_equality = true
+native_activation_equality = true
+topology_unchanged = true
+all_edge_fields_unchanged = true
+weights_unchanged = true
+recurrent_weights_unchanged = true
+spectral_radius_unchanged = true
+operator_norm_unchanged = true
+structural_events = 0
+credit_packets = 0
+confirmatory_seeds = 0
+cell_sample_rng_disjointness = true
+ledger_reconciliation = true
+raw_prediction_and_target_hashes = true
+source_check_at_start = true
+source_check_before_persistence = true
+source_check_at_end = true
+
+[persistence]
+canonical_directory = "artifacts/experiment_000/lwoh_l1_v3"
+freeze_record = "artifacts/experiment_000/lwoh_l1_v3/PRE_METRIC_FREEZE.json"
+freeze_record_sidecar = "artifacts/experiment_000/lwoh_l1_v3/PRE_METRIC_FREEZE.sha256"
+freeze_verification = "artifacts/experiment_000/lwoh_l1_v3/FREEZE_VERIFICATION.json"
+freeze_verification_sidecar = "artifacts/experiment_000/lwoh_l1_v3/FREEZE_VERIFICATION.sha256"
+phase_ledger = "artifacts/experiment_000/lwoh_l1_v3/PHASE_LEDGER.json"
+admission_primary = "artifacts/experiment_000/lwoh_l1_v3/admission_seeds_90_94_pairs_100.json"
+admission_primary_sidecar = "artifacts/experiment_000/lwoh_l1_v3/admission_seeds_90_94_pairs_100.sha256"
+admission_rerun = "artifacts/experiment_000/lwoh_l1_v3/admission_seeds_90_94_pairs_100_rerun.json"
+admission_rerun_sidecar = "artifacts/experiment_000/lwoh_l1_v3/admission_seeds_90_94_pairs_100_rerun.sha256"
+admission_verification = "artifacts/experiment_000/lwoh_l1_v3/ADMISSION_DETERMINISM_VERIFICATION.json"
+learning_primary = "artifacts/experiment_000/lwoh_l1_v3/learning_seeds_95_104.json"
+learning_primary_sidecar = "artifacts/experiment_000/lwoh_l1_v3/learning_seeds_95_104.sha256"
+learning_rerun = "artifacts/experiment_000/lwoh_l1_v3/learning_seeds_95_104_rerun.json"
+learning_rerun_sidecar = "artifacts/experiment_000/lwoh_l1_v3/learning_seeds_95_104_rerun.sha256"
+learning_verification = "artifacts/experiment_000/lwoh_l1_v3/LEARNING_DETERMINISM_VERIFICATION.json"
+canonical_json = true
+binding_sha256_sidecars = true
+strict_regeneration_verifier = true
+
+[source_freeze]
+required_before_official_metric = true
+paths = [
+  "docs/EXPERIMENT_000_LWOH_L1_V3_PROTOCOL.md",
+  "configs/experiment_000_lwoh_l1_v3.toml",
+  "src/adaptive_learning_substrate/experiment_000_lwoh_l1_execution_v3.py",
+  "tests/test_experiment_000_lwoh_l1_execution_v3.py",
+  "src/adaptive_learning_substrate/__init__.py",
+  "src/adaptive_learning_substrate/environments.py",
+  "src/adaptive_learning_substrate/events.py",
+  "src/adaptive_learning_substrate/experiment_000.py",
+  "src/adaptive_learning_substrate/experiment_000_memory_probe.py",
+  "src/adaptive_learning_substrate/recurrent.py",
+  "src/adaptive_learning_substrate/experiment000_data.py",
+  "src/adaptive_learning_substrate/artifact_validation.py",
+  "src/adaptive_learning_substrate/frozen_history.py",
+  "src/adaptive_learning_substrate/graph.py",
+  "src/adaptive_learning_substrate/learning.py",
+  "src/adaptive_learning_substrate/readout_trace_recurrent.py",
+  "src/adaptive_learning_substrate/_frozen_sources/recurrent_b56216.snapshot",
+  "src/adaptive_learning_substrate/streaming_log.py",
+  "src/adaptive_learning_substrate/experiment_000_online_trace_learning.py",
+  "docs/EXPERIMENT_000_LWOH_L1_PROTOCOL.md",
+  "configs/experiment_000_lwoh_l1.toml",
+  "pyproject.toml",
+  "requirements-dev.lock",
+  ".github/workflows/project-quality.yml",
+  "artifacts/evidence_integrity_repair_2026-09-04/PRE_METRIC_LINEAGE.json",
+  "artifacts/evidence_integrity_repair_2026-09-04/PRE_METRIC_LINEAGE.sha256",
+  "tests/test_artifact_validation.py",
+  "tests/test_events_integrity.py",
+  "tests/test_evidence_integrity_log_writer.py",
+  "tests/test_experiment000_data.py",
+  "tests/test_numeric_atomicity.py",
+  "tests/test_experiment000_stream_provenance.py",
+  "tests/test_graph.py",
+  "tests/test_recurrent.py",
+]
+source_drift_terminal_prefix = "INVALID_PROCEDURE_SOURCE_DRIFT:"
+transitive_closure_must_be_subset = true
+missing_added_changed_or_raced_byte_fails = true
+source_manifest_stability_required = true
+pre_metric_and_implementation_manifests_byte_identical = true
+rehash_all_prerequisites = true
+prerequisite_paths = [
+  "docs/EXPERIMENT_000_LWOH_L1_PROTOCOL.md",
+  "configs/experiment_000_lwoh_l1.toml",
+  "docs/EXPERIMENT_000_LWOH_L1_A3_AMENDMENT_V2.md",
+  "configs/experiment_000_lwoh_l1_v2.toml",
+]
+
+[v3_source_closure]
+runner_entry = "src/adaptive_learning_substrate/experiment_000_lwoh_l1_execution_v3.py"
+runner_transitive_import_closure_discovered_mechanically = true
+validator_closure_sha256 = "dfe6d44343dc85790da1724c41fd41e7c4e22458faa44ca7d221a8eebfe52067"
+validator_closure_paths = [
+  "src/adaptive_learning_substrate/_frozen_sources/recurrent_b56216.snapshot",
+  "src/adaptive_learning_substrate/artifact_validation.py",
+  "src/adaptive_learning_substrate/environments.py",
+  "src/adaptive_learning_substrate/events.py",
+  "src/adaptive_learning_substrate/experiment000_data.py",
+  "src/adaptive_learning_substrate/experiment_000.py",
+  "src/adaptive_learning_substrate/experiment_000_memory_probe.py",
+  "src/adaptive_learning_substrate/frozen_history.py",
+  "src/adaptive_learning_substrate/graph.py",
+  "src/adaptive_learning_substrate/learning.py",
+  "src/adaptive_learning_substrate/readout_trace_recurrent.py",
+  "src/adaptive_learning_substrate/recurrent.py",
+]
+registered_paths_must_cover_runner_and_validator_closures = true
+added_removed_changed_or_raced_path_fails_closed = true
+
+[v3_prerequisite_rehash]
+checkpoints = ["before_v3_freeze", "before_each_official_metric_process", "before_each_artifact_persistence", "after_each_artifact_persistence", "during_independent_terminal_verification"]
+groups = ["lineage_json_and_sidecar", "a3_terminal_primary_rerun_freeze_phase_and_sidecars", "v2_historical_freeze_pair", "global_validator_and_shared_transitive_import_closure", "pyproject_lock_ci", "v3_protocol_config_runner_test_and_full_transitive_closure"]
+fail_on_absent_added_changed_or_raced_byte = true
+partial_publication_authorized = false
+readiness_on_any_mismatch = 21
+source_manifest_stability_required = true
+
+[phase_order]
+steps = ["activation", "freeze", "freeze_verification", "tests", "scratch_smoke", "scratch_verification", "admission_primary", "admission_rerun", "admission_verification", "implementation_source_revalidation", "learning_primary", "learning_rerun", "learning_verification", "readiness_verification"]
+reject_out_of_order = true
+phase_receipts_are_write_once_hash_chained = true
+
+[v3_phase_branches]
+pass_path = ["activation", "freeze", "freeze_verification", "tests", "scratch_smoke", "scratch_verification", "admission_primary", "admission_rerun", "admission_verification", "implementation_source_revalidation", "learning_primary", "learning_rerun", "learning_verification", "readiness_verification"]
+admission_fail_path = ["activation", "freeze", "freeze_verification", "tests", "scratch_smoke", "scratch_verification", "admission_primary", "admission_rerun", "admission_verification", "readiness_verification"]
+admission_fail_skipped_phases = ["implementation_source_revalidation", "learning_primary", "learning_rerun", "learning_verification"]
+admission_fail_skipped_artifacts_and_sidecars_must_be_absent = true
+learning_before_exact_admission_pass_forbidden = true
+
+[v3_process_freshness]
+official_workers_exact = 5
+parent_blas_threads_exact = 1
+worker_blas_threads_exact = 1
+identity_fields = ["process_id", "process_instance_token", "run_started_utc", "start_nonce", "executable_sha256", "source_manifest_sha256"]
+pid_alone_sufficient = false
+worker_identities_distinct = true
+worker_identities_exclude_coordinator = true
+primary_rerun_coordinator_worker_and_verifier_sets_pairwise_disjoint = true
+fresh_verifier_replay_required = true
+coordinator_identity_persisted = true
+worker_identity_rows_persisted = true
+identity_checked_before_persistence_and_by_deep_verifier = true
+
+[v3_host_preflight]
+required_before_every_official_worker_creation = true
+require_ac_power = true
+minimum_available_memory_bytes = 8589934592
+minimum_free_artifact_volume_bytes = 53687091200
+cpu_observation_seconds = 60
+maximum_mean_cpu_percent = 20.0
+maximum_pagefile_used_percent = 10.0
+all_checks_must_pass = true
+failure_starts_no_official_worker_and_writes_no_metric_artifact = true
+
+[v3_idempotent_publication]
+exclusive_create_report_when_absent = true
+existing_report_must_be_canonical_self_hashed_and_exact_would_be_bytes = true
+existing_different_bytes_fail_closed = true
+derive_only_missing_sidecar_from_validated_immutable_report = true
+append_only_missing_receipt_after_report_and_sidecar_validation = true
+replace_recompute_truncate_existing_canonical_bytes_forbidden = true
+intra_phase_crash_restarts_from_initial_state_in_fresh_process = true
+stdout_contains_only_terminal_and_artifact_hashes = true
+stdout_raw_report_forbidden = true
+
+[decision]
+pass_terminal = "LWOH_LEARNING_PASS"
+admission_fail_prefix = "LWOH_ADMISSION_FAIL:"
+learning_fail_prefix = "LWOH_LEARNING_FAIL:"
+score_before = 21
+score_if_all_gates_pass = 25
+score_if_any_gate_fails = 21
+partial_score = false
+delayed_recurrent_points_delta = 2
+robustness_points_delta = 2
+other_category_points_delta = 0
+authorizes_confirmatory = false
+authorizes_experiment_001 = false
+supports_ccf_claim = false
+supports_novelty_claim = false
+supports_efficiency_claim = false
+supports_world_competitiveness_claim = false
+[v3_contract]
+schema_version = "experiment-000-lwoh-l1-v3-contract-v1"
+namespace = "artifacts/experiment_000/lwoh_l1_v3"
+pre_metric_freeze = "artifacts/experiment_000/lwoh_l1_v3/PRE_METRIC_FREEZE.json"
+activation_verification = "artifacts/experiment_000/lwoh_l1_v3/ACTIVATION_VERIFICATION.json"
+freeze_verification = "artifacts/experiment_000/lwoh_l1_v3/FREEZE_VERIFICATION.json"
+admission_determinism_verification = "artifacts/experiment_000/lwoh_l1_v3/ADMISSION_DETERMINISM_VERIFICATION.json"
+implementation_source_freeze = "artifacts/experiment_000/lwoh_l1_v3/IMPLEMENTATION_SOURCE_FREEZE.json"
+learning_determinism_verification = "artifacts/experiment_000/lwoh_l1_v3/LEARNING_DETERMINISM_VERIFICATION.json"
+readiness_verification = "artifacts/experiment_000/lwoh_l1_v3/READINESS_VERIFICATION.json"
+readiness_schema_version = "experiment-000-lwoh-l1-v3-readiness-v1"
+lineage_handoff = "artifacts/evidence_integrity_repair_2026-09-04/PRE_METRIC_LINEAGE.json"
+sidecar_schema = "algorithm_report_file_report_sha256"
+canonical_json = true
+self_hash_omits_named_self_field = true
+fail_closed_readiness = 21
+canonical_encoding = "utf-8"
+canonical_sort_keys = true
+canonical_separators = "comma_colon_no_spaces"
+canonical_ensure_ascii = true
+canonical_allow_nan = false
+canonical_trailing_newline = true
+record_self_hash_canonical_trailing_newline = false
+report_file_hash_includes_trailing_newline = true
+sidecar_algorithm = "sha256"
+sidecar_report_file = "basename_only"
+sidecar_report_sha256 = "lowercase_64_hex"
+sidecar_exact_keys = ["algorithm", "report_file", "report_sha256"]
+
+[v3_score_contract]
+readiness_before = 21
+readiness_after_complete_pass = 25
+readiness_after_any_failure = 21
+required_terminal = "LWOH_LEARNING_PASS"
+partial_score = false
+delayed_recurrent_points_delta = 2
+robustness_points_delta = 2
+confirmatory_authorized = false
+experiment_001_authorized = false
+readiness_baseline_path = "docs/RESEARCH_READINESS_90.md"
+readiness_baseline_sha256 = "538ace4e9c236ae49a41184e774266a386e4feafa72bc8de24ade099b053bca4"
+
+[v3_seed_attestation]
+admission = [90, 91, 92, 93, 94]
+learning = [95, 96, 97, 98, 99, 100, 101, 102, 103, 104]
+scratch = [9090, 9091]
+forbidden_a3 = [105, 106, 107, 108, 109]
+forbidden_confirmatory = [1000, 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016, 1017, 1018, 1019]
+no_prior_lwoh_metric = true
+reaffirmed_before_v3_metric = true
+operational_authority = true
+
+[v3_rng]
+scientific_namespace = "experiment-000-lwoh-l1-v1"
+derivation = "first_128_bits_SHA256(experiment-000-lwoh-l1-v1|master_seed|cell|split|purpose)"
+reason = "preserve_the_prospectively_registered_v1_streams_under_v3_lineage_only_versioning"
+v3_protocol_version_is_rng_operand = false
+
+[v3_operational_seed_partition]
+admission = [90, 91, 92, 93, 94]
+conditional_learning = [95, 96, 97, 98, 99, 100, 101, 102, 103, 104]
+scratch_only = [9090, 9091]
+forbidden_a3 = [105, 106, 107, 108, 109]
+closed_confirmatory = [1000, 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016, 1017, 1018, 1019]
+assigned_seed_metric_artifacts_must_be_absent_before_freeze = true
+wrong_duplicate_or_extra_seed_fails_before_worker_creation = true
+enforce_for_all_phases = true
+
+[v3_gate_order]
+admission = ["A01", "A02", "A03", "A04", "A05", "A06", "A07", "A08", "A09", "A10"]
+learning_primary = ["P01", "P02", "P03_frozen", "P03_latest", "P03_independent", "P04"]
+learning_statistics = ["exact_assignments_1024", "all_holm_adjusted_p_strictly_below_0_05", "all_bootstrap_lower_bounds_positive"]
+learning_robustness = ["R01_d4", "R01_d16", "R02_d4", "R02_d16", "R03", "R04", "R05_independent", "R05_frozen"]
+learning_controls_and_integrity = ["visible_cue_clean_exact_one", "visible_cue_removed_exact_half", "all_seed_integrity"]
+failure_order = "concatenate_registered_family_arrays_and_filter_failed"
+runtime_map_locale_completion_or_process_order_forbidden = true
+
+[v3_status_terminal_contract]
+admission_status_pass = "LWOH_ADMISSION_PASS"
+admission_status_fail = "LWOH_ADMISSION_FAIL"
+admission_terminal_pass = "LWOH_ADMITTED:write_once_ttl32"
+admission_terminal_fail_prefix = "LWOH_ADMISSION_FAIL:"
+learning_status_pass = "LWOH_LEARNING_PASS"
+learning_status_fail = "LWOH_LEARNING_FAIL"
+learning_terminal_pass = "LWOH_LEARNING_PASS"
+learning_terminal_fail_prefix = "LWOH_LEARNING_FAIL:"
+status_and_terminal_are_distinct_fields = true
+
+[v3_stage_contract.pre_metric_freeze]
+path = "artifacts/experiment_000/lwoh_l1_v3/PRE_METRIC_FREEZE.json"
+schema_version = "experiment-000-lwoh-l1-v3-pre-metric-freeze-v1"
+status = "FROZEN_PRE_METRIC"
+self_hash_field = "freeze_payload_sha256"
+
+[v3_stage_contract.activation_verification]
+path = "artifacts/experiment_000/lwoh_l1_v3/ACTIVATION_VERIFICATION.json"
+schema_version = "experiment-000-lwoh-l1-v3-activation-verification-v1"
+status = "ACTIVATED_A3_NO_SELECTION_V3"
+self_hash_field = "verification_payload_sha256"
+
+[v3_stage_contract.freeze_verification]
+path = "artifacts/experiment_000/lwoh_l1_v3/FREEZE_VERIFICATION.json"
+schema_version = "experiment-000-lwoh-l1-v3-freeze-verification-v1"
+status = "PASS"
+self_hash_field = "verification_payload_sha256"
+
+[v3_stage_contract.admission_determinism_verification]
+path = "artifacts/experiment_000/lwoh_l1_v3/ADMISSION_DETERMINISM_VERIFICATION.json"
+schema_version = "experiment-000-lwoh-l1-v3-admission-determinism-verification-v1"
+statuses = ["LWOH_ADMISSION_PASS", "LWOH_ADMISSION_FAIL"]
+self_hash_field = "verification_payload_sha256"
+
+[v3_stage_contract.implementation_source_freeze]
+path = "artifacts/experiment_000/lwoh_l1_v3/IMPLEMENTATION_SOURCE_FREEZE.json"
+schema_version = "experiment-000-lwoh-l1-v3-implementation-source-freeze-v1"
+status = "FROZEN_FOR_LEARNING"
+self_hash_field = "freeze_payload_sha256"
+manifest_must_equal_pre_metric_manifest_byte_for_byte = true
+new_source_freeze_forbidden = true
+
+[v3_stage_contract.learning_determinism_verification]
+path = "artifacts/experiment_000/lwoh_l1_v3/LEARNING_DETERMINISM_VERIFICATION.json"
+schema_version = "experiment-000-lwoh-l1-v3-learning-determinism-verification-v1"
+statuses = ["LWOH_LEARNING_PASS", "LWOH_LEARNING_FAIL"]
+self_hash_field = "verification_payload_sha256"
+
+[v3_stage_contract.readiness_verification]
+path = "artifacts/experiment_000/lwoh_l1_v3/READINESS_VERIFICATION.json"
+schema_version = "experiment-000-lwoh-l1-v3-readiness-v1"
+statuses = ["LWOH_ADMISSION_FAIL", "LWOH_LEARNING_FAIL", "LWOH_LEARNING_PASS"]
+self_hash_field = "verification_payload_sha256"
+
+[v3_global_readiness]
+baselines = ["random", "frozen_head", "latest_state", "independent_label", "ridge", "visible_cue"]
+registered_condition_ids = ["lwoh_head", "latest_head", "lwoh_independent_label", "frozen_lwoh_head", "rand", "ridge_lwoh", "ridge_latest", "visible_cue_hold"]
+delays = [4, 8, 16]
+exact_record_keys = ["schema_version", "status", "readiness_before", "readiness_after", "partial_score", "admission_seeds", "learning_seeds", "delays", "baselines", "deterministic_admission", "deterministic_learning", "all_admission_gates_pass", "all_learning_gates_pass", "all_robustness_gates_pass", "all_integrity_gates_pass", "lineage_handoff_path", "lineage_handoff_sha256", "chain_artifacts", "verification_payload_sha256"]
+extra_record_keys_forbidden = true
+admission_fail_boolean_tuple = [true, false, false, false, false, false]
+learning_pass_boolean_tuple = [true, true, true, true, true, true]
+boolean_tuple_order = ["deterministic_admission", "deterministic_learning", "all_admission_gates_pass", "all_learning_gates_pass", "all_robustness_gates_pass", "all_integrity_gates_pass"]
+extended_facts_live_only_in_deep_verifier = true
+
+[v3_raw_reports]
+admission_schema_version = "experiment-000-lwoh-l1-v3-admission-report-v1"
+learning_schema_version = "experiment-000-lwoh-l1-v3-learning-report-v1"
+admission_primary = "artifacts/experiment_000/lwoh_l1_v3/admission_seeds_90_94_pairs_100.json"
+admission_rerun = "artifacts/experiment_000/lwoh_l1_v3/admission_seeds_90_94_pairs_100_rerun.json"
+learning_primary = "artifacts/experiment_000/lwoh_l1_v3/learning_seeds_95_104.json"
+learning_rerun = "artifacts/experiment_000/lwoh_l1_v3/learning_seeds_95_104_rerun.json"
+complete_per_seed_rows_required = true
+raw_predictions_targets_events_activations_ledgers_and_process_identities_required = true
+strict_stream_and_prediction_regeneration_required = true
+primary_rerun_deterministic_payloads_equal = true
+deterministic_payload_excludes = ["phase_label", "output_path", "output_name", "process_id", "process_instance_token", "start_nonce", "run_started_utc", "coordinator_identity", "worker_identities", "verifier_identity", "wall_time", "runtime", "peak_memory", "publication_metadata"]
+scientific_values_may_not_be_excluded = true
+
+[v3_deep_verifier]
+module = "adaptive_learning_substrate.experiment_000_lwoh_l1_execution_v3"
+callback = "validate_official_v3_chain"
+exact_result_keys = ["status", "readiness_before", "readiness_after", "raw_admission_primary_valid", "raw_admission_rerun_valid", "raw_learning_primary_valid", "raw_learning_rerun_valid", "all_sidecars_valid", "assigned_seeds_exact", "per_seed_rows_complete", "admission_gates_recomputed", "learning_gates_recomputed", "statistical_gates_recomputed", "robustness_gates_recomputed", "controls_recomputed", "distinct_processes_verified", "phase_ledger_valid", "source_manifest_valid", "source_manifest_stable", "deterministic_payloads_equal", "absence_branches_valid", "condition_ids_exact", "official_and_forbidden_seeds_exact", "replay_verified", "process_freshness_verified"]
+boolean_fields = ["raw_admission_primary_valid", "raw_admission_rerun_valid", "raw_learning_primary_valid", "raw_learning_rerun_valid", "all_sidecars_valid", "assigned_seeds_exact", "per_seed_rows_complete", "admission_gates_recomputed", "learning_gates_recomputed", "statistical_gates_recomputed", "robustness_gates_recomputed", "controls_recomputed", "distinct_processes_verified", "phase_ledger_valid", "source_manifest_valid", "source_manifest_stable", "deterministic_payloads_equal", "absence_branches_valid", "condition_ids_exact", "official_and_forbidden_seeds_exact", "replay_verified", "process_freshness_verified"]
+admission_fail_required_true = ["raw_admission_primary_valid", "raw_admission_rerun_valid", "all_sidecars_valid", "assigned_seeds_exact", "per_seed_rows_complete", "admission_gates_recomputed", "controls_recomputed", "distinct_processes_verified", "phase_ledger_valid", "source_manifest_valid", "source_manifest_stable", "deterministic_payloads_equal", "absence_branches_valid", "condition_ids_exact", "official_and_forbidden_seeds_exact", "replay_verified", "process_freshness_verified"]
+learning_terminal_requires_all_boolean_fields_true = true
+extra_result_keys_forbidden = true
+recompute_from_raw_rows = true
+metadata_only_promotion_forbidden = true
+
+[v1_scientific_binding]
+protocol_path = "docs/EXPERIMENT_000_LWOH_L1_PROTOCOL.md"
+protocol_sha256 = "42e237add4eac9ca24a6d5781efefce6367f8c9f2c4c4065b324a1703706dc7e"
+config_path = "configs/experiment_000_lwoh_l1.toml"
+config_sha256 = "7ed14e7dc85f7178e6dce0fbdf1e1d05d93c41129eba8b3c3f491dbfeffc86b8"
+canonical_object_sha256 = "a1704b1197c3858372b60e067237989460c0cdb43d3e59edc64fac594ab3fcbb"
+scientific_payload_sha256 = "9910bdeab37ff5b633f62dcbb1cd8517a7c5a456107e4b6857fcd7eb9f31f66b"
+
+[v1_scientific_binding.section_sha256]
+seed_partition = "eab80230225df1d5365c75277fc8d47f6bc9538d12c598ac3a6c286fded66adc"
+graph = "6108ff5550ce2094e371ada8fb94334abd292cf21231f4ce3bf6bb490bfcf1b3"
+memory = "6bfc848d810c4b36fe85b5fd4537b3f2b0ad7c043024a5025f4ecb38dad48544"
+admission = "543bdb041a997d4e0c4de30aebc279f3e023f548ea14434213e532e63e164f8f"
+learner = "3233e9aa3abc22235dcc62d2af219189e75ecc1ccc439d1f695f4ef76b2f874a"
+head_alignment_tests = "403b75aacd21655422b1222de7127f6c840e21a2b5f68b6fc84a45d8ec852801"
+conditions = "b919db1a48561113cdf7ec97218cc8f7f7e454866ff8abebf6ddb2d354cefc9c"
+data = "64e5c822f68c5586bb4b8677226b9b2f849d4700bf2fb62c8c49cbc1f4bc23b1"
+scratch = "2f036a8b661bcc14630076b179ac4ebfff7a4d14fefe68629b5ede5bf096c622"
+learning_gates = "b91e838001fb313b30bbc15af14bbaf1612ea35f83fdd4686b2ff65d7d724a4e"
+control_integrity = "80b7d69503c61447d0897bc8c524c239054628cf9e9839f8f7121c9eefcb436e"
+compute = "cbf54c96a0c58c1e95090cfe6dcdc3d144cc82ba37638f7e6df83f5e29a1d1b3"
+integrity = "3493c7858c0f567a2bfd79c64f180608d4a16dfae6b8b7bbba03c1ebcf674edd"
+decision = "f2b2cda96aa451417849953409d84dc7cc9012766efa7bd7e5d80229caaddcd6"
+
+[v2_historical_binding]
+protocol_path = "docs/EXPERIMENT_000_LWOH_L1_A3_AMENDMENT_V2.md"
+protocol_sha256 = "d46929ed8ce01e361580df1f119976797aabd915062815be70e7a4bde77b9c2b"
+config_path = "configs/experiment_000_lwoh_l1_v2.toml"
+config_sha256 = "c5f18680ff37f4a03bfb88ee5d8320783c85b07ab88d389b68543434d98e95fb"
+freeze_path = "artifacts/experiment_000/lwoh_l1_v2/PRE_TERMINAL_CONTINGENCY_FREEZE.json"
+freeze_sha256 = "29df018dd3274bed0d5c6cd6c5ee898ec0953f8dde4186154a6ea7002ccae667"
+freeze_sidecar_path = "artifacts/experiment_000/lwoh_l1_v2/PRE_TERMINAL_CONTINGENCY_FREEZE.sha256"
+freeze_sidecar_sha256 = "ce96606de22018301d3997fdd951b4c377f6802e7ea529c9cc0e1ede20d72205"
+execution_authority = false
+metrics_generated = false
+
+[a3_predecessor_binding]
+status = "NO_SELECTION"
+registered_seeds = [105, 106, 107, 108, 109]
+freeze_record_path = "artifacts/experiment_000/readout_trace_a3/FREEZE_RECORD.json"
+freeze_record_sha256 = "50c8a2af24394a15ec8f93abb2f7c851d60ca385fd65764e2d22bda2757bc164"
+phase_sequence_path = "artifacts/experiment_000/readout_trace_a3/PHASE_SEQUENCE.json"
+phase_sequence_sha256 = "5021adb4f98495e22f5e627ebf526aa665508ad3a4894f3a31f90afd455a22fe"
+primary_report_path = "artifacts/experiment_000/readout_trace_a3/custom_seeds_105_109_pairs_100.json"
+primary_report_sha256 = "29762f830e569d61911d32ad97143c2289e3c6eccef3411ebee27c0ccb4995fa"
+primary_sidecar_path = "artifacts/experiment_000/readout_trace_a3/custom_seeds_105_109_pairs_100.sha256"
+primary_sidecar_sha256 = "ab0ea50e36c939816e6af1f1a9a5605b0af71b4fc6b308cb9afc8fc3011678f7"
+rerun_report_path = "artifacts/experiment_000/readout_trace_a3/custom_seeds_105_109_pairs_100_rerun.json"
+rerun_report_sha256 = "98f5e6fb3fcde58b7dc422407619a6273bcea372359196d6d0f94e4db20a2619"
+rerun_sidecar_path = "artifacts/experiment_000/readout_trace_a3/custom_seeds_105_109_pairs_100_rerun.sha256"
+rerun_sidecar_sha256 = "2cd1a89cb9012b5cce4d50993993eb86bcf1ebaf4c31f8722d8c0cc39e3e4b73"
+terminal_path = "artifacts/experiment_000/readout_trace_a3/DETERMINISM_VERIFICATION.json"
+terminal_sha256 = "bca71de64cab5ef2f167e5a6e23de4b05bf66722f62fb7cf2d0fa71a85d2e464"
+deterministic_payload_sha256 = "beb1b140347d572d5418e9cf586d1709fd6366f474917708c00e000f4ca17747"
+
+[v3_artifacts]
+activation_verification = "artifacts/experiment_000/lwoh_l1_v3/ACTIVATION_VERIFICATION.json"
+pre_metric_freeze = "artifacts/experiment_000/lwoh_l1_v3/PRE_METRIC_FREEZE.json"
+freeze_verification = "artifacts/experiment_000/lwoh_l1_v3/FREEZE_VERIFICATION.json"
+phase_ledger = "artifacts/experiment_000/lwoh_l1_v3/PHASE_LEDGER.json"
+phase_receipt_directory = "artifacts/experiment_000/lwoh_l1_v3/phases"
+test_verification = "artifacts/experiment_000/lwoh_l1_v3/TEST_VERIFICATION.json"
+scratch_report = "artifacts/experiment_000/lwoh_l1_v3_scratch/smoke.json"
+scratch_verification = "artifacts/experiment_000/lwoh_l1_v3_scratch/SMOKE_VERIFICATION.json"
+admission_primary = "artifacts/experiment_000/lwoh_l1_v3/admission_seeds_90_94_pairs_100.json"
+admission_rerun = "artifacts/experiment_000/lwoh_l1_v3/admission_seeds_90_94_pairs_100_rerun.json"
+learning_primary = "artifacts/experiment_000/lwoh_l1_v3/learning_seeds_95_104.json"
+learning_rerun = "artifacts/experiment_000/lwoh_l1_v3/learning_seeds_95_104_rerun.json"
+admission_verification = "artifacts/experiment_000/lwoh_l1_v3/ADMISSION_DETERMINISM_VERIFICATION.json"
+implementation_source_freeze = "artifacts/experiment_000/lwoh_l1_v3/IMPLEMENTATION_SOURCE_FREEZE.json"
+learning_verification = "artifacts/experiment_000/lwoh_l1_v3/LEARNING_DETERMINISM_VERIFICATION.json"
+readiness_verification = "artifacts/experiment_000/lwoh_l1_v3/READINESS_VERIFICATION.json"
+
+[v3_sidecars]
+activation_verification = "artifacts/experiment_000/lwoh_l1_v3/ACTIVATION_VERIFICATION.sha256"
+pre_metric_freeze = "artifacts/experiment_000/lwoh_l1_v3/PRE_METRIC_FREEZE.sha256"
+freeze_verification = "artifacts/experiment_000/lwoh_l1_v3/FREEZE_VERIFICATION.sha256"
+phase_ledger = "artifacts/experiment_000/lwoh_l1_v3/PHASE_LEDGER.sha256"
+test_verification = "artifacts/experiment_000/lwoh_l1_v3/TEST_VERIFICATION.sha256"
+scratch_report = "artifacts/experiment_000/lwoh_l1_v3_scratch/smoke.sha256"
+scratch_verification = "artifacts/experiment_000/lwoh_l1_v3_scratch/SMOKE_VERIFICATION.sha256"
+admission_primary = "artifacts/experiment_000/lwoh_l1_v3/admission_seeds_90_94_pairs_100.sha256"
+admission_rerun = "artifacts/experiment_000/lwoh_l1_v3/admission_seeds_90_94_pairs_100_rerun.sha256"
+admission_verification = "artifacts/experiment_000/lwoh_l1_v3/ADMISSION_DETERMINISM_VERIFICATION.sha256"
+implementation_source_freeze = "artifacts/experiment_000/lwoh_l1_v3/IMPLEMENTATION_SOURCE_FREEZE.sha256"
+learning_primary = "artifacts/experiment_000/lwoh_l1_v3/learning_seeds_95_104.sha256"
+learning_rerun = "artifacts/experiment_000/lwoh_l1_v3/learning_seeds_95_104_rerun.sha256"
+learning_verification = "artifacts/experiment_000/lwoh_l1_v3/LEARNING_DETERMINISM_VERIFICATION.sha256"
+readiness_verification = "artifacts/experiment_000/lwoh_l1_v3/READINESS_VERIFICATION.sha256"
+
+[v3_commands]
+sole_command_authority = true
+other_command_tables_authoritative = false
+activation = "python -m adaptive_learning_substrate.experiment_000_lwoh_l1_execution_v3 --phase activation"
+freeze = "python -m adaptive_learning_substrate.experiment_000_lwoh_l1_execution_v3 --phase freeze"
+freeze_verification = "python -m adaptive_learning_substrate.experiment_000_lwoh_l1_execution_v3 --phase verify-freeze"
+tests = "python -m pytest -q -p no:cacheprovider tests/test_experiment_000_lwoh_l1_execution_v3.py"
+test_record = "python -m adaptive_learning_substrate.experiment_000_lwoh_l1_execution_v3 --phase tests"
+scratch_smoke = "python -m adaptive_learning_substrate.experiment_000_lwoh_l1_execution_v3 --phase scratch --seeds 9090 9091 --workers 2 --pairs 8 --output artifacts/experiment_000/lwoh_l1_v3_scratch/smoke.json"
+scratch_verification = "python -m adaptive_learning_substrate.experiment_000_lwoh_l1_execution_v3 --phase verify-scratch"
+admission_primary = "python -m adaptive_learning_substrate.experiment_000_lwoh_l1_execution_v3 --phase admission --seeds 90 91 92 93 94 --workers 5 --output artifacts/experiment_000/lwoh_l1_v3/admission_seeds_90_94_pairs_100.json"
+admission_rerun = "python -m adaptive_learning_substrate.experiment_000_lwoh_l1_execution_v3 --phase admission-rerun --seeds 90 91 92 93 94 --workers 5 --output artifacts/experiment_000/lwoh_l1_v3/admission_seeds_90_94_pairs_100_rerun.json"
+admission_verification = "python -m adaptive_learning_substrate.experiment_000_lwoh_l1_execution_v3 --phase verify-admission"
+implementation_source_revalidation = "python -m adaptive_learning_substrate.experiment_000_lwoh_l1_execution_v3 --phase implementation-freeze"
+learning_primary = "python -m adaptive_learning_substrate.experiment_000_lwoh_l1_execution_v3 --phase learning --seeds 95 96 97 98 99 100 101 102 103 104 --workers 5 --output artifacts/experiment_000/lwoh_l1_v3/learning_seeds_95_104.json"
+learning_rerun = "python -m adaptive_learning_substrate.experiment_000_lwoh_l1_execution_v3 --phase learning-rerun --seeds 95 96 97 98 99 100 101 102 103 104 --workers 5 --output artifacts/experiment_000/lwoh_l1_v3/learning_seeds_95_104_rerun.json"
+learning_verification = "python -m adaptive_learning_substrate.experiment_000_lwoh_l1_execution_v3 --phase verify-learning"
+readiness_verification = "python -m adaptive_learning_substrate.experiment_000_lwoh_l1_execution_v3 --phase readiness"
+lint = "python -m ruff check src/adaptive_learning_substrate/experiment_000_lwoh_l1_execution_v3.py tests/test_experiment_000_lwoh_l1_execution_v3.py"
+compile = "python -m compileall -q src tests"
+manifest_validation = "python -m adaptive_learning_substrate.experiment_000_lwoh_l1_execution_v3 --phase validate-preregistration"
+rollback_validation = "bash artifacts/v3_takeover_2026-09-04/ROLLBACK.sh --check"
+
+[v3_freeze_schema]
+required_fields = ["protocol_path", "protocol_sha256", "config_path", "config_sha256", "config_canonical_object_sha256", "readiness_baseline_path", "readiness_baseline_sha256", "source_manifest", "source_manifest_sha256"]
+
+[v3_artifact_publication]
+exact_keys = true
+reject_unknown_keys = true
+stable_reopen_required = true
+atomic_report_sidecar_pair = true
+cleanup_failed_pair = true
+
+[v3_artifact_schemas]
+activation_verification = "experiment-000-lwoh-l1-v3-activation-verification-v1"
+pre_metric_freeze = "experiment-000-lwoh-l1-v3-pre-metric-freeze-v1"
+freeze_verification = "experiment-000-lwoh-l1-v3-freeze-verification-v1"
+phase_ledger = "experiment-000-lwoh-l1-v3-phase-ledger-v1"
+test_verification = "experiment-000-lwoh-l1-v3-test-verification-v1"
+scratch_verification = "experiment-000-lwoh-l1-v3-scratch-verification-v1"
+admission_verification = "experiment-000-lwoh-l1-v3-admission-determinism-verification-v1"
+implementation_source_freeze = "experiment-000-lwoh-l1-v3-implementation-source-freeze-v1"
+learning_verification = "experiment-000-lwoh-l1-v3-learning-determinism-verification-v1"
+readiness_verification = "experiment-000-lwoh-l1-v3-readiness-v1"
+
+[v3_operational_math]
+admission_ratio_aggregation = "median_of_per_seed_guarded_ratios"
+a07_numerator = "per_seed_output_cue_delta_rms"
+a07_denominator = "per_seed_output_sd"
+zero_over_zero = "fail"
+ridge_gram_equation = "Z_train_transpose_Z_train_over_n_plus_alpha_I"
+ridge_rhs_equation = "Z_train_transpose_y_train_over_n"
+ridge_intercept = "mean_training_target"
+ridge_zero_variance = "exact_zero_scale_coordinate_inactive"
+ridge_solver = "numpy_linalg_solve"
+sign_flip_extreme_tolerance = 0.0
+bootstrap_resample_unit = "seed"
+bootstrap_shared_resample_indices = true
+bootstrap_interval = "percentile_95_two_sided_lower_endpoint"
+bootstrap_lower_quantile = 0.025
+bootstrap_quantile_method = "linear"
+
+[v3_observed_integrity]
+shared_observer_kernel = true
+per_condition_compute_ledgers = true
+parent_blas_threads_one = true
+worker_blas_threads_one = true
+peak_memory_gated = true
+five_unique_worker_instances_gated = true
+edge_field_commitment_includes_plastic = true
+native_event_activation_equivalence_observed = true
+ccf_call_count_observed = true
+prediction_target_ledger_observed = true

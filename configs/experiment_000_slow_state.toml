@@ -1,0 +1,324 @@
+# Preregistered architecture-only, no-learning slow local-state experiment.
+# Original draft preceded implementation; operative A1 froze during
+# implementation and before any slow-state smoke/full result.
+
+[protocol]
+name = "experiment_000_slow_local_state"
+version = "slow-state-v1-a1"
+mechanism = "CCF-v0"
+implementation_revision = "C000.1"
+scope = "custom_seed_architecture_diagnostic"
+confirmatory = false
+architecture_change = "lazy_hidden_local_state_retention_only"
+implementation_isolation = "new_experiment_only_subclass_or_wrapper"
+result_is_mechanism_pass = false
+status = "A1_preflight_audited_frozen_before_smoke_or_official_run"
+freeze_date = "2026-09-02"
+preceding_result = "memory_sweep_NO_SELECTION"
+original_draft_frozen_before_implementation = true
+a1_amendment_date = "2026-09-02"
+a1_during_implementation_before_any_slow_state_task_result = true
+a1_changes_equation_grid_seeds_samples_or_numeric_gates = false
+a1_reason = "independent_protocol_consistency_and_reproducibility_audit"
+
+[execution]
+enabled = true
+required_seed_role = "custom"
+seeds = [60, 61, 62, 63, 64]
+forbidden_seed_sets = ["development_0_4", "alignment_42_46", "memory_sweep_50_54", "confirmatory_1000_1019"]
+pairs_per_split = 100
+smoke_pairs_per_split = 2
+condition_order = ["native", "lambda_0_25", "lambda_0_50", "lambda_0_75", "lambda_0_90", "lambda_0_95"]
+confirmatory_seeds_allowed = false
+required_identical_full_runs = 2
+smoke_can_amend_numeric_design = false
+
+[data]
+noise_events = 8
+train_eval_substreams_disjoint = true
+same_noise_within_cue_pair = true
+same_streams_across_conditions = true
+counterfactual_cues = [0, 1]
+terminal_feedback_delivered = false
+query_event_tick = 9
+forced_output_tick = 11
+
+[graph]
+hidden_count = 64
+recurrent_in_degree = 8
+input_fan_out = 8
+output_fan_in = 16
+edge_delay_ticks = 1
+query_readout_latency_ticks = 2
+initial_weight_scale = 0.35
+activation = "tanh"
+float_type = "float64"
+emit_threshold = 1e-3
+topology_frozen = true
+topology_scope = "explicit_RecurrentEdge_message_graph_only"
+internal_temporal_state_path_added = true
+full_structural_hash_fields = ["ordered_input_nodes", "ordered_hidden_nodes", "output_node", "edge_id", "source", "destination", "kind", "delay_ticks", "plastic"]
+require_full_structural_hash_equals_native = true
+all_weights_bitwise_frozen = true
+recurrent_radius_frozen_to_native = true
+recurrent_operator_norm_frozen_to_native = true
+
+[ccf_inert_provenance]
+learning_enabled = false
+apply_supervised_credit_allowed = false
+native_recurrent_source = "src/adaptive_learning_substrate/recurrent.py"
+native_recurrent_source_sha256 = "b56216abd19f5d3aaf935b6e58831c54ccf078ce4e4c7ef80e006b04ca6231b3"
+require_native_recurrent_source_byte_identical = true
+credit_method_source_names_in_order = ["_credit_target", "_sign", "_record_packet", "apply_supervised_credit"]
+credit_method_source_read = "utf8_text_with_universal_newline_normalization"
+credit_method_source_parse = "ast_RecurrentEventGraph_FunctionDef"
+credit_method_source_segment = "splitlines_keepends_from_earliest_decorator_or_def_through_end_lineno_inclusive"
+credit_method_source_separator = "\n---METHOD---\n"
+credit_method_source_bundle_sha256 = "38378b7dc7d0b69644c9bd790a1f09d2ebfb9ec642da5136a2475f89f260607d"
+require_test_reproduces_credit_method_source_bundle_sha256 = true
+ccf_document = "docs/CCF_V0.md"
+ccf_document_sha256 = "24907da979acef2ce95b6bb50ca52461d7b9d8b3bb6154fe871ae9000d7b7e9b"
+learning_rate = 0.01
+trace_decay = 0.97
+route_gain = 0.90
+credit_limit = 1.0
+max_update = 0.05
+weight_clip = 3.0
+trace_horizon = 32
+hop_limit = 16
+epsilon_weight = 1e-12
+epsilon_message = 1e-12
+epsilon_route = 1e-12
+credit_minimum = 1e-8
+
+[intervention]
+applies_to_node_kind = "hidden"
+implementation_location = "new_experiment_module_not_native_recurrent_source"
+native_class_modification_allowed = false
+applies_to_sources = false
+applies_to_output = false
+native_condition = "native"
+native_retention = 0.0
+target_conditions = ["lambda_0_25", "lambda_0_50", "lambda_0_75", "lambda_0_90", "lambda_0_95"]
+retention_coefficients = [0.25, 0.50, 0.75, 0.90, 0.95]
+retention_half_lives_ticks = [0.5, 1.0, 2.409420839653209, 6.578813478960585, 13.513407333964874]
+retention_after_ten_ticks = [9.5367431640625e-7, 9.765625e-4, 5.6313514709472656e-2, 3.486784401000001e-1, 5.987369392383787e-1]
+incoming_drive_formula = "u_i_t=sum_over_arriving_messages(w_e_times_v_m)"
+retained_state_formula = "r_i_t=lambda_power_delta_t_times_last_processed_activation"
+preactivation_formula = "p_i_t=u_i_t_plus_r_i_t"
+activation_formula = "a_i_t=tanh(p_i_t)"
+state_write_formula = "s_i=a_i_t_and_tau_i=t"
+native_equivalence_formula = "lambda_zero_implies_r_i_t_zero_for_positive_processing_gap"
+zero_retention_uses_native_fast_path = true
+lazy_decay = true
+update_requires_nonempty_hidden_message_batch = true
+inactive_unit_state_touches = 0
+state_reset_each_episode = true
+state_crosses_episode_boundary = false
+state_creates_edge_or_message = false
+adaptive_retention_allowed = false
+omission_trace_holds_retained_state_fixed = true
+fabricate_edge_trace_for_local_state = false
+first_processing_after_sentinel_counts_read_decay_write = true
+episode_reset_touches_field = "local_state_reset_touches"
+episode_reset_touches_per_episode = 64
+episode_reset_touch_scope = "nonzero_retention_candidates_only"
+native_and_zero_retention_reset_touches = 0
+episode_reset_touches_excluded_from_forward_touch_ledgers = true
+
+[native_equivalence]
+required_before_full_run = true
+retention = 0.0
+compare_step_results = true
+compare_emitted_events_after_episode_id_normalization = true
+compare_activations_bitwise = true
+compare_query_result_bitwise = true
+compare_features_bitwise = true
+compare_legacy_additive_ledger_deltas = true
+require_zero_local_state_touches = true
+
+[probe]
+feature_definition = "ordered_query_root_output_edge_message_values_absent_is_zero"
+feature_order = "lexical_edge_id"
+ridge_alpha = 1e-3
+ratio_denominator_epsilon = 1e-15
+native_multiplier_denominator_epsilon = 1e-15
+allow_protocol_defined_null_ratios = true
+null_ratio_is_integrity_failure = false
+null_ratio_fails_corresponding_selection_gate = true
+activity_ledger_field = "emitted_unit_events"
+secondary_activity_ledger_field = "forward_edge_touches"
+record_activation_evaluations = true
+hidden_activation_evaluation_field = "hidden_activation_evaluations"
+record_hidden_emission_count = true
+hidden_emission_density_denominator = 704
+record_state_touch_counts = true
+state_touch_fields = ["local_state_read_touches", "local_state_decay_touches", "local_state_write_touches"]
+state_reset_touch_field = "local_state_reset_touches"
+state_observation_touch_field = "local_state_observation_touches"
+record_activation_saturation_thresholds = [0.95, 0.99, 0.999]
+activation_saturation_denominator = "all_hidden_activation_evaluations_including_nonemissions"
+record_max_absolute_preactivation = true
+feature_reconstruction_absolute_tolerance = 1e-12
+feature_reconstruction_relative_tolerance = 1e-12
+allow_sparse_efficiency_claim = false
+record_pair_rows = true
+record_array_hashes = true
+require_all_realized_numeric_values_finite = true
+require_zero_credit_packets = true
+require_zero_weight_writes = true
+require_weights_unchanged_during_probe = true
+
+[stability_assay]
+enabled = true
+cue_tick = 0
+cue_channel = "cue"
+cue_polarities = [-1.0, 1.0]
+blank_ticks = 256
+blank_step = "step_empty_mapping"
+count_node_kind = "hidden"
+record_hidden_events_each_tick = true
+record_vector_hash = true
+record_last_nonzero_tick = true
+final_window_first_tick = 193
+final_window_last_tick = 256
+required_final_window_hidden_emissions = 0
+effective_state_observation_tick = 256
+effective_state_max_abs = 1e-4
+effective_state_snapshot_is_read_only = true
+effective_state_snapshot_mutates_state_or_timestamp = false
+effective_state_observation_touches_per_snapshot = 64
+effective_state_observation_touch_scope = "nonzero_retention_candidates_only"
+native_and_zero_retention_observation_touches = 0
+native_and_zero_retention_effective_state = "conceptual_all_zero_vector"
+effective_state_snapshot_excluded_from_forward_touch_ledgers = true
+wake_query_after_blank_tail = true
+wake_feature_half_difference_l2_max = 1e-3
+wake_output_half_difference_abs_max = 1e-3
+require_every_seed_condition_and_polarity = true
+require_topology_unchanged = true
+require_weights_unchanged = true
+
+[selection]
+full_result_only = true
+smoke_can_select = false
+aggregation = "median_across_seeds"
+evaluation_cue_feature_delta_rms_vs_native_multiplier_min = 3.0
+within_seed_absolute_cue_threefold_improvement_count_min = 4
+evaluation_cue_to_noise_feature_ratio_min = 0.50
+evaluation_cue_to_noise_vs_native_multiplier_min = 3.0
+within_seed_threefold_improvement_count_min = 4
+evaluation_ridge_accuracy_min = 0.70
+evaluation_output_cue_delta_to_sd_min = 0.50
+task_total_event_activity_vs_native_max = 1.10
+max_matched_episode_event_activity_vs_native_max = 1.15
+task_total_forward_edge_touches_vs_native_max = 1.10
+max_matched_episode_forward_edge_touches_vs_native_max = 1.15
+blank_tail_final_64_hidden_emissions_required = 0
+effective_blank_tail_state_max_abs = 1e-4
+wake_feature_half_difference_l2_max = 1e-3
+wake_output_half_difference_abs_max = 1e-3
+require_all_invariants_every_seed_and_split = true
+any_required_seed_null_makes_corresponding_gate_false = true
+selection_aggregation_drops_nulls = false
+native_is_selectable = false
+choice_rule = "lowest_retention_coefficient_satisfying_all_gates"
+no_passing_candidate_status = "NO_SELECTION"
+no_selection_advances_candidate = false
+
+[integrity]
+all_realized_numeric_values_finite = true
+protocol_defined_null_ratios_allowed = true
+state_and_activation_in_tanh_range = true
+topology_hash_equals_native = true
+full_structural_hash_including_plastic_equals_native = true
+complete_weight_hash_equals_native = true
+per_kind_weight_hashes_equal_native = true
+spectral_radius_abs_rel_tolerance = 1e-12
+operator_norm_abs_rel_tolerance = 1e-12
+episode_initial_state_is_positive_zero = true
+retention_coefficient_immutable = true
+state_touches_require_nonempty_hidden_message_batch = true
+candidate_state_touches_equal_hidden_activation_evaluations = true
+reset_and_observation_touches_separately_accounted = true
+zero_credit_packets_and_touches = true
+zero_weight_write_touches = true
+feature_edges_identical = true
+ccf_method_source_bundle_hash_frozen = true
+ccf_document_hash_frozen = true
+native_recurrent_source_whole_file_hash_frozen = true
+
+[determinism]
+full_run_count = 2
+require_payload_sha256_match = true
+nondeterministic_status = "NONDETERMINISTIC_INVALID"
+invalid_native_status = "INVALID_NATIVE_CONTROL"
+valid_terminal_statuses = ["SELECTED:<condition>", "NO_SELECTION"]
+quartile_probabilities = [0.25, 0.50, 0.75]
+quartile_algorithm = "numpy_quantile_method_linear"
+
+[ridge]
+zero_variance_threshold = 1e-15
+zero_variance_coordinate_standardized_to_zero = true
+zero_variance_coordinate_excluded_from_solve = true
+zero_variance_embedded_coefficient = 0.0
+zero_score_prediction = 1
+zero_score_rule = "score_greater_than_or_equal_to_zero_predicts_cue_1"
+
+[smoke_policy]
+candidate_numeric_gates_can_select = false
+candidate_numeric_gate_failure_blocks_full = false
+candidate_numeric_gate_failure_prunes_condition = false
+implementation_global_or_native_integrity_failure_blocks_full = true
+
+[required_micrograph_tests]
+positive_and_negative_retained_state = true
+one_and_multi_tick_exact_decay = true
+blank_has_no_state_update_touch_or_emission = true
+episode_reset_and_separate_reset_counter = true
+nonemitted_processed_activation_writes_state = true
+first_sentinel_processing_counts_read_decay_write = true
+omission_holds_retained_term_fixed = true
+sources_and_output_remain_native = true
+effective_state_observation_is_nonmutating = true
+structural_hash_detects_plastic_only_change = true
+numeric_absolute_tolerance = 1e-12
+numeric_relative_tolerance = 1e-12
+
+[cli]
+module = "adaptive_learning_substrate.experiment_000_slow_state"
+seed_argument = "--seeds 60 61 62 63 64"
+retention_argument = "--retentions 0.25 0.50 0.75 0.90 0.95"
+ridge_argument = "--ridge-alpha 0.001"
+smoke_pairs_argument = "--pairs-per-split 2"
+full_pairs_argument = "--pairs-per-split 100"
+reject_omitted_or_duplicate_values = true
+reject_nonfinite_values = true
+reject_out_of_order_or_extra_values = true
+
+[hashing]
+algorithm = "sha256"
+canonical_json = "sorted_keys_compact_separators_ascii_allow_nan_false"
+array_encoding = "shape_plus_contiguous_little_endian_float64_bytes"
+weight_map_order = "selected_edges_sorted_by_edge_id"
+weight_map_prefix = "ascii_str_tuple_row_count_then_NUL"
+weight_map_row_framing = "utf8_edge_id_then_NUL_then_one_contiguous_little_endian_float64_then_LF"
+weight_map_kinds = ["all", "input", "recurrent", "output"]
+require_direct_bitwise_float64_equality = true
+exclude_from_deterministic_payload = ["runtime", "timestamps", "absolute_paths", "machine_text"]
+
+[output]
+directory = "artifacts/experiment_000/slow_state"
+smoke_report = "smoke_pairs_2.json"
+smoke_report_hash_sidecar = "smoke_pairs_2.sha256"
+primary_report = "custom_seeds_60_64_pairs_100.json"
+rerun_report = "custom_seeds_60_64_pairs_100_rerun.json"
+primary_report_hash_sidecar = "custom_seeds_60_64_pairs_100.sha256"
+rerun_report_hash_sidecar = "custom_seeds_60_64_pairs_100_rerun.sha256"
+write_pair_rows = true
+write_condition_rows = true
+write_stability_rows = true
+write_state_touch_rows = true
+write_saturation_rows = true
+write_provenance = true
+write_gate_decisions = true

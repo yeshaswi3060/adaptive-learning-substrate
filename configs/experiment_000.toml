@@ -1,0 +1,23 @@
+# Runnable deterministic plumbing scaffold. This is not confirmatory Experiment 001.
+[experiment]
+name = "stage1_scaffold_experiment_000"
+seed = 0
+learner = "ccf"
+phase_a_episodes = 96
+phase_b_episodes = 48
+train_delay_min = 1
+train_delay_max = 3
+eval_delay = 3
+phase_a_operations = ["FLIP0", "ROTL"]
+phase_b_operations = ["NOT"]
+
+[graph]
+trace_decay = 0.97
+learning_rate = 0.01
+weight_clip = 3.0
+max_update = 0.05
+trace_horizon = 32
+route_gain = 0.90
+
+[output]
+write_event_log = true

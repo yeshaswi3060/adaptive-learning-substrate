@@ -1,0 +1,41 @@
+# Frozen-scale defaults from the Experiment 001 protocol. Tests use smoke.toml.
+[status]
+implementation_ready = false
+required_runner = "future_64_unit_recurrent_event_graph"
+
+[experiment]
+name = "experiment_001"
+seed = 0
+learner = "ccf"
+phase_a_episodes = 4000
+phase_b_episodes = 2000
+train_delay_min = 4
+train_delay_max = 8
+eval_delay = 8
+secondary_eval_delay = 16
+phase_a_operations = ["FLIP0", "ROTL"]
+phase_b_operations = ["NOT"]
+
+[graph]
+hidden_units = 64
+edge_delay_ticks = 1
+recurrent_inputs_per_hidden = 8
+hidden_targets_per_input_channel = 8
+hidden_inputs_per_output = 16
+trace_decay = 0.97
+learning_rate = 0.01
+weight_clip = 3.0
+max_update = 0.05
+trace_horizon = 32
+route_gain = 0.90
+
+[evaluation]
+phase_a_accuracy_min = 0.95
+new_operation_accuracy_min = 0.90
+retained_phase_a_accuracy_min = 0.90
+forgetting_max = 0.05
+composition_accuracy_min = 0.80
+per_program_composition_min = 0.65
+
+[output]
+write_event_log = true

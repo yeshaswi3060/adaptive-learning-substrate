@@ -1,0 +1,397 @@
+# Prospective procedural recovery of readout-trace-v1a.
+# Scientific equation, grid, features, sample sizes, gates, aggregation, and
+# selection are unchanged. Seeds 65-69 are invalid/nonselecting and forbidden.
+
+[protocol]
+name = "experiment_000_readout_decoupled_local_trace_a2"
+version = "readout-trace-v1a2"
+schema_version = "experiment-000-readout-decoupled-local-trace-v1a2"
+protocol_path = "docs/EXPERIMENT_000_READOUT_TRACE_A2_PROTOCOL.md"
+mechanism = "CCF-v0"
+implementation_revision = "C000.1"
+scope = "custom_seed_architecture_diagnostic_procedural_recovery"
+confirmatory = false
+architecture_change = "passive_readout_only_hidden_activity_trace"
+result_is_mechanism_pass = false
+result_is_learning_pass = false
+selection_scope = "representation_only"
+scientific_design_frozen_before_seed_70_74_task_metrics = true
+scientific_fields_changed_from_v1a = false
+procedural_fields_changed_from_v1a = true
+
+[prior_invalid_execution]
+protocol_version = "readout-trace-v1a"
+seeds = [65, 66, 67, 68, 69]
+classification = "INVALID_PROCEDURE_NONSELECTING"
+reason_missing_persisted_verified_smoke_before_full = true
+reason_frozen_execution_flag_was_false = true
+may_select = false
+may_change_a2_equation_grid_features_samples_gates_or_aggregation = false
+observed_deterministic_payload_sha256 = "ab5d009ea3afdb8dced17919b255da01e7f8c309af9b2e371eb3b2963c5053cb"
+observed_report_file_sha256 = "33bdf52cfdac5f30f797a5a75b034a8734f60729e42336fc91eff44ebe3b2d5a"
+
+[execution]
+enabled = true
+enabled_subject_to_valid_freeze_and_phase_prerequisites = true
+required_seed_role = "custom"
+seeds = [70, 71, 72, 73, 74]
+forbidden_seed_sets = [
+    "development_0_4",
+    "alignment_42_46",
+    "memory_sweep_50_54",
+    "slow_state_60_64",
+    "invalid_readout_trace_v1a_65_69",
+    "confirmatory_1000_1019",
+]
+pairs_per_split = 100
+smoke_pairs_per_split = 2
+condition_order = ["native", "rho_0_25", "rho_0_50", "rho_0_75", "rho_0_90", "rho_0_95"]
+confirmatory_seeds_allowed = false
+required_identical_full_runs = 2
+required_phase_order = [
+    "tests",
+    "freeze",
+    "persisted_smoke_and_sidecar",
+    "machine_smoke_verification",
+    "full",
+    "rerun",
+    "determinism_verification",
+]
+require_persisted_smoke_before_full = true
+require_machine_smoke_verification_before_full = true
+require_primary_full_before_rerun = true
+require_source_hashes_at_run_start_and_end = true
+require_no_source_change_between_freeze_and_final_verification = true
+reject_before_output_creation_on_prerequisite_failure = true
+
+[parallel_execution]
+worker_processes = 5
+worker_assignment = "one independent official seed per worker"
+worker_seed_order = [70, 71, 72, 73, 74]
+result_seed_order = [70, 71, 72, 73, 74]
+condition_order_within_worker = ["native", "rho_0_25", "rho_0_50", "rho_0_75", "rho_0_90", "rho_0_95"]
+execution_only_parallelism = true
+shared_graph_or_rng_allowed = false
+ordered_serialization_required = true
+one_worker_parity_test_required = true
+official_smoke_full_and_rerun_worker_count = 5
+numpy_backend = "CPU"
+float_type = "float64"
+gpu_used = false
+omp_num_threads_per_worker = 1
+mkl_num_threads_per_worker = 1
+openblas_num_threads_per_worker = 1
+numexpr_num_threads_per_worker = 1
+worker_timing_excluded_from_deterministic_payload = true
+
+[data]
+noise_events = 8
+train_eval_substreams_disjoint = true
+same_noise_within_cue_pair = true
+same_streams_across_conditions = true
+counterfactual_cues = [0, 1]
+terminal_feedback_delivered = false
+query_event_tick = 9
+forced_output_tick = 11
+full_counterfactual_forward_episodes_per_seed_condition = 400
+full_counterfactual_forward_episodes_total = 12000
+
+[graph]
+hidden_count = 64
+recurrent_in_degree = 8
+input_fan_out = 8
+output_fan_in = 16
+edge_delay_ticks = 1
+query_readout_latency_ticks = 2
+initial_weight_scale = 0.35
+activation = "tanh"
+float_type = "float64"
+emit_threshold = 1e-3
+topology_frozen = true
+recurrent_forward_path_is_native = true
+all_weights_bitwise_frozen = true
+recurrent_radius_frozen_to_native = true
+recurrent_operator_norm_frozen_to_native = true
+full_structural_hash_fields = [
+    "ordered_input_nodes",
+    "ordered_hidden_nodes",
+    "output_node",
+    "edge_id",
+    "source",
+    "destination",
+    "kind",
+    "delay_ticks",
+    "plastic",
+]
+require_full_structural_hash_equals_native = true
+
+[ccf_inert_provenance]
+learning_enabled = false
+apply_supervised_credit_allowed = false
+native_recurrent_source = "src/adaptive_learning_substrate/recurrent.py"
+native_recurrent_source_sha256 = "b56216abd19f5d3aaf935b6e58831c54ccf078ce4e4c7ef80e006b04ca6231b3"
+require_native_recurrent_source_byte_identical = true
+credit_method_source_names_in_order = ["_credit_target", "_sign", "_record_packet", "apply_supervised_credit"]
+credit_method_source_bundle_sha256 = "38378b7dc7d0b69644c9bd790a1f09d2ebfb9ec642da5136a2475f89f260607d"
+ccf_document = "docs/CCF_V0.md"
+ccf_document_sha256 = "24907da979acef2ce95b6bb50ca52461d7b9d8b3bb6154fe871ae9000d7b7e9b"
+learning_rate = 0.01
+trace_decay = 0.97
+route_gain = 0.90
+credit_limit = 1.0
+max_update = 0.05
+weight_clip = 3.0
+trace_horizon = 32
+hop_limit = 16
+epsilon_weight = 1e-12
+epsilon_message = 1e-12
+epsilon_route = 1e-12
+credit_minimum = 1e-8
+
+[intervention]
+applies_to_node_kind = "hidden"
+native_condition = "native"
+native_retention = 0.0
+target_conditions = ["rho_0_25", "rho_0_50", "rho_0_75", "rho_0_90", "rho_0_95"]
+retention_coefficients = [0.25, 0.50, 0.75, 0.90, 0.95]
+trace_form = "bounded_ema"
+trace_update_formula = "m_i <- rho**(t-kappa_i) * m_i + (1-rho) * a_i(t)"
+trace_bound_invariant = "abs(m_i) <= 1"
+trace_is_read_only_at_query = true
+trace_enters_recurrent_or_emission_path = false
+trace_creates_edge_or_message = false
+fabricate_unit_event_or_edge_trace_for_local_trace = false
+state_reset_each_episode = true
+state_crosses_episode_boundary = false
+zero_retention_uses_native_fast_path = true
+zero_retention_trace_touches = 0
+first_processing_after_sentinel_counts_read_decay_write = true
+episode_reset_touches_per_episode = 64
+episode_reset_touches_excluded_from_forward_touch_ledgers = true
+
+[feature]
+native_condition_readout = "native_message_readout_unchanged"
+native_condition_trace_reads = 0
+candidate_feature_definition = "output_edge_source_unit_trace_decayed_to_forced_output_tick"
+candidate_feature_formula = "z_e = rho**(t_out - kappa_j(e)) * m_j(e)  (0.0 if j(e) never fired)"
+candidate_feature_order = "lexical_output_edge_id"
+candidate_feature_dimension = 16
+candidate_forced_output_recomputed_from_features = true
+candidate_forced_output_formula = "p_output = sum_e w_e * z_e ; o = tanh(p_output)"
+cross_representation_comparison = "candidate_decayed_trace_vs_native_message_readout"
+diagnostic_only_full_trace_vector_dimension = 64
+diagnostic_only_full_trace_vector_selects = false
+
+[rho_zero_graph_equivalence]
+required_before_smoke = true
+retention = 0.0
+scope = "graph_dynamics_and_native_readout_only_not_trace_readout"
+compare_step_results = true
+compare_emitted_events_after_episode_id_normalization = true
+compare_activations_bitwise = true
+compare_query_result_bitwise = true
+compare_native_readout_features_bitwise = true
+compare_native_forced_output_bitwise = true
+compare_legacy_additive_ledger_deltas = true
+require_zero_local_trace_touches = true
+
+[probe]
+ridge_alpha = 1e-3
+ratio_denominator_epsilon = 1e-15
+native_multiplier_denominator_epsilon = 1e-15
+allow_protocol_defined_null_ratios = true
+null_ratio_fails_corresponding_selection_gate = true
+activity_ledger_field = "emitted_unit_events"
+secondary_activity_ledger_field = "forward_edge_touches"
+record_activation_saturation_thresholds = [0.95, 0.99, 0.999]
+feature_reconstruction_absolute_tolerance = 1e-12
+feature_reconstruction_relative_tolerance = 1e-12
+allow_sparse_efficiency_claim = false
+require_all_realized_numeric_values_finite = true
+require_zero_credit_packets = true
+require_zero_weight_writes = true
+require_weights_unchanged_during_probe = true
+recurrent_activity_expected_equal_to_native = true
+trace_compute_touches_reported_separately = true
+no_zero_compute_cost_claim_allowed = true
+
+[ridge]
+alpha = 1e-3
+zero_variance_threshold = 1e-15
+zero_variance_coordinate_standardized_to_zero = true
+zero_variance_coordinate_excluded_from_solve = true
+zero_variance_embedded_coefficient = 0.0
+zero_score_prediction = 1
+zero_score_rule = "score_greater_than_or_equal_to_zero_predicts_cue_1"
+
+[stability_assay]
+enabled = true
+cue_tick = 0
+cue_channel = "cue"
+cue_polarities = [-1.0, 1.0]
+blank_ticks = 256
+final_window_first_tick = 193
+final_window_last_tick = 256
+required_final_window_hidden_emissions = 0
+effective_state_observation_tick = 256
+effective_state_max_abs = 1e-4
+effective_trace_snapshot_is_read_only = true
+wake_query_after_blank_tail = true
+wake_feature_half_difference_l2_max = 1e-3
+wake_output_half_difference_abs_max = 1e-3
+blank_tail_emissions_expected_equal_to_native = true
+
+[selection]
+full_result_only = true
+smoke_can_select = false
+smoke_gate_eligible = false
+smoke_gate_pass_must_be_false = true
+smoke_passing_conditions_must_be_empty = true
+smoke_selected_condition_must_be_null = true
+aggregation = "median_across_seeds"
+evaluation_cue_feature_delta_rms_vs_native_multiplier_min = 3.0
+within_seed_absolute_cue_threefold_improvement_count_min = 4
+evaluation_cue_to_noise_feature_ratio_min = 0.50
+evaluation_cue_to_noise_vs_native_multiplier_min = 3.0
+within_seed_threefold_improvement_count_min = 4
+evaluation_ridge_accuracy_min = 0.70
+evaluation_output_cue_delta_to_sd_min = 0.50
+task_total_event_activity_vs_native_max = 1.10
+max_matched_episode_event_activity_vs_native_max = 1.15
+task_total_forward_edge_touches_vs_native_max = 1.10
+max_matched_episode_forward_edge_touches_vs_native_max = 1.15
+blank_tail_final_64_hidden_emissions_required = 0
+effective_blank_tail_state_max_abs = 1e-4
+wake_feature_half_difference_l2_max = 1e-3
+wake_output_half_difference_abs_max = 1e-3
+require_all_invariants_every_seed_and_split = true
+any_required_seed_null_makes_corresponding_gate_false = true
+selection_aggregation_drops_nulls = false
+native_is_selectable = false
+choice_rule = "lowest_retention_coefficient_satisfying_all_gates"
+no_passing_candidate_status = "NO_SELECTION"
+no_selection_advances_candidate = false
+
+[integrity]
+all_realized_numeric_values_finite = true
+trace_and_activation_in_tanh_range = true
+trace_bound_invariant_abs_le_1 = true
+topology_hash_equals_native = true
+full_structural_hash_including_plastic_equals_native = true
+complete_weight_hash_equals_native = true
+per_kind_weight_hashes_equal_native = true
+spectral_radius_abs_rel_tolerance = 1e-12
+operator_norm_abs_rel_tolerance = 1e-12
+episode_initial_trace_is_positive_zero = true
+retention_coefficient_immutable = true
+trace_touches_require_nonempty_hidden_message_batch = true
+candidate_trace_touches_equal_hidden_activation_evaluations = true
+reset_and_observation_touches_separately_accounted = true
+zero_credit_packets_and_touches = true
+zero_weight_write_touches = true
+feature_edges_identical = true
+recurrent_forward_path_bitwise_native_every_condition = true
+source_manifest_matches_freeze_at_start = true
+source_manifest_matches_freeze_at_end = true
+
+[source_freeze]
+freeze_record = "artifacts/experiment_000/readout_trace_a2/FREEZE_RECORD.json"
+require_correct_utc_and_local_timezone = true
+require_environment_identity = true
+require_canonical_source_manifest_sha256 = true
+required_files = [
+    "docs/EXPERIMENT_000_READOUT_TRACE_A2_PROTOCOL.md",
+    "configs/experiment_000_readout_trace_a2.toml",
+    "src/adaptive_learning_substrate/experiment_000_readout_trace_a2.py",
+    "src/adaptive_learning_substrate/readout_trace_recurrent.py",
+    "src/adaptive_learning_substrate/experiment_000_slow_state.py",
+    "src/adaptive_learning_substrate/experiment_000_memory_probe.py",
+    "src/adaptive_learning_substrate/experiment_000.py",
+    "src/adaptive_learning_substrate/experiment000_data.py",
+    "src/adaptive_learning_substrate/recurrent.py",
+    "src/adaptive_learning_substrate/events.py",
+    "tests/test_experiment_000_readout_trace_a2.py",
+    "docs/CCF_V0.md",
+]
+verify_manifest_before_output_creation = true
+verify_manifest_after_computation_before_output_write = true
+verify_manifest_during_final_determinism_check = true
+source_change_status = "INVALID_PROCEDURE_NONSELECTING"
+
+[phase_prerequisites]
+tests_must_pass_before_freeze = true
+lint_and_static_checks_must_pass_before_freeze = true
+official_seed_task_metrics_forbidden_before_freeze = true
+full_requires_valid_freeze_record = true
+full_requires_valid_smoke_report = true
+full_requires_valid_smoke_sidecar = true
+full_requires_successful_machine_smoke_verification = true
+rerun_requires_valid_primary_report_and_sidecar = true
+determinism_requires_valid_primary_and_rerun_reports_and_sidecars = true
+all_phases_require_frozen_source_manifest = true
+
+[artifacts]
+directory = "artifacts/experiment_000/readout_trace_a2"
+freeze_record = "FREEZE_RECORD.json"
+phase_sequence_record = "PHASE_SEQUENCE.json"
+smoke_report = "smoke_pairs_2.json"
+smoke_report_hash_sidecar = "smoke_pairs_2.sha256"
+smoke_verification = "SMOKE_VERIFICATION.json"
+primary_report = "custom_seeds_70_74_pairs_100.json"
+primary_report_hash_sidecar = "custom_seeds_70_74_pairs_100.sha256"
+rerun_report = "custom_seeds_70_74_pairs_100_rerun.json"
+rerun_report_hash_sidecar = "custom_seeds_70_74_pairs_100_rerun.sha256"
+determinism_verification = "DETERMINISM_VERIFICATION.json"
+require_every_prior_phase_artifact_hash_bound = true
+write_pair_rows = true
+write_condition_rows = true
+write_stability_rows = true
+write_trace_touch_rows = true
+write_source_start_and_end_manifests = true
+write_gate_decisions = true
+
+[determinism]
+full_run_count = 2
+require_payload_sha256_match = true
+require_report_file_sidecars_match = true
+require_selection_objects_match = true
+require_source_start_end_and_freeze_hashes_match = true
+nondeterministic_status = "NONDETERMINISTIC_INVALID"
+invalid_native_status = "INVALID_NATIVE_CONTROL"
+invalid_procedure_status = "INVALID_PROCEDURE_NONSELECTING"
+valid_terminal_statuses = ["SELECTED:<condition>", "NO_SELECTION"]
+quartile_probabilities = [0.25, 0.50, 0.75]
+quartile_algorithm = "numpy_quantile_method_linear"
+
+[downstream_credit_contract]
+selection_type = "representation_only"
+actual_candidate_output_uses_passive_trace_readout = true
+current_trace_readout_has_causal_unit_event_path = false
+current_trace_readout_has_causal_edge_trace_path = false
+selected_candidate_may_advance_to = "separately_preregistered_exact_alignment_instrument_on_fresh_custom_seeds"
+selected_candidate_may_advance_directly_to_ccf_training = false
+ordinary_ccf_v0_update_may_claim_credit_through_passive_trace = false
+trace_credit_or_causal_ancestry_change_requires = "separate_CCF_v1_protocol_tests_seeds_and_ablations"
+
+[hashing]
+algorithm = "sha256"
+canonical_json = "sorted_keys_compact_separators_ascii_allow_nan_false"
+array_encoding = "shape_plus_contiguous_little_endian_float64_bytes"
+exclude_from_deterministic_payload = [
+    "runtime",
+    "timestamps",
+    "absolute_paths",
+    "machine_text",
+    "worker_completion_order",
+    "process_ids",
+]
+
+[cli]
+module = "adaptive_learning_substrate.experiment_000_readout_trace_a2"
+seed_argument = "--seeds 70 71 72 73 74"
+retention_argument = "--retentions 0.25 0.50 0.75 0.90 0.95"
+ridge_argument = "--ridge-alpha 0.001"
+worker_argument = "--workers 5"
+smoke_pairs_argument = "--pairs-per-split 2"
+full_pairs_argument = "--pairs-per-split 100"
+reject_omitted_duplicate_nonfinite_out_of_order_or_extra_values = true

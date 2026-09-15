@@ -1,0 +1,184 @@
+# Frozen TRACE-HEAD-L1 protocol. Official evidence uses full mode only.
+
+[protocol]
+name = "experiment_000_online_trace_learning"
+version = "trace-head-l1-v1"
+schema_version = "experiment-000-online-trace-learning-v1"
+scope = "custom_seed_true_learning_result"
+confirmatory = false
+readiness_score_before = 21
+readiness_score_after_pass = 25
+readiness_score_after_fail = 21
+
+[prerequisites.a3]
+protocol_version = "readout-trace-v1a3"
+registered_seeds = [105, 106, 107, 108, 109]
+phase_ledger = "artifacts/experiment_000/readout_trace_a3/PHASE_SEQUENCE.json"
+primary_report = "artifacts/experiment_000/readout_trace_a3/custom_seeds_105_109_pairs_100.json"
+rerun_report = "artifacts/experiment_000/readout_trace_a3/custom_seeds_105_109_pairs_100_rerun.json"
+determinism_report = "artifacts/experiment_000/readout_trace_a3/DETERMINISM_VERIFICATION.json"
+required_terminal_prefix = "SELECTED:"
+resource_invalid_predecessor = "readout-trace-v1a2"
+
+[prerequisites.alignment]
+primary_report = "artifacts/experiment_000/trace_head_alignment/alignment_seeds_75_79_episodes_32.json"
+rerun_report = "artifacts/experiment_000/trace_head_alignment/alignment_seeds_75_79_episodes_32_rerun.json"
+determinism_report = "artifacts/experiment_000/trace_head_alignment/DETERMINISM_VERIFICATION.json"
+required_schema = "experiment-000-trace-head-l1-v1"
+required_terminal = "TRACE_HEAD_ALIGNMENT_PASS"
+selected_condition_and_retention_must_match_a3 = true
+canonical_payload_equality_required = true
+fresh_process_required = true
+
+[execution]
+official_seeds = [80, 81, 82, 83, 84, 85, 86, 87, 88, 89]
+scratch_smoke_seeds = [900, 901]
+scratch_smoke_examples_per_split = 2
+required_seed_role = "custom"
+worker_count = 5
+numeric_library_threads_per_worker = 1
+float_type = "float64"
+gpu_used = false
+one_pass = true
+replay_allowed = false
+
+[freeze]
+schema_version = "experiment-000-online-trace-learning-freeze-v1"
+recorded_before_official_metrics = true
+exact_protocol_and_config_bytes_required = true
+all_source_hashes_required = true
+record_path = "configs/experiment_000_online_trace_learning.freeze.json"
+record_mode = "external_read_only_self_hashed"
+external_anchor_environment = "TRACE_HEAD_L1_FREEZE_SHA256"
+transitive_local_import_closure_required = true
+upstream_protocol_config_test_bindings_required = true
+
+[data]
+target_encoding_negative = -1.0
+target_encoding_positive = 1.0
+strict_order = ["cue_and_distractors", "query", "features", "prediction", "target_reveal", "update"]
+eval_updates = false
+train_eval_ids_disjoint = true
+independent_rng_namespaces = true
+
+[[cells]]
+name = "d8_clean"
+distractor_count = 8
+cue_removed = false
+train_examples = 512
+eval_examples = 512
+
+[[cells]]
+name = "d4_clean"
+distractor_count = 4
+cue_removed = false
+train_examples = 256
+eval_examples = 256
+
+[[cells]]
+name = "d16_clean"
+distractor_count = 16
+cue_removed = false
+train_examples = 256
+eval_examples = 256
+
+[[cells]]
+name = "d8_cue_removed"
+distractor_count = 8
+cue_removed = true
+train_examples = 256
+eval_examples = 256
+
+[head]
+feature_count = 16
+activation = "tanh"
+initialization = "exact_zero"
+loss = "0.5*(y-q)^2"
+learning_rate = 0.5
+normalizer = "max(1, ||z||^2)"
+coordinate_update_clip = 0.05
+parameter_clip = 3.0
+bias = false
+
+[compute_matching]
+scope = "total_mechanism"
+native_dummy_trace_state_count = 64
+native_dummy_trace_work_must_equal_candidate = true
+native_dummy_state_timestamp_history_replay_required = true
+native_dummy_query_feature_dot_tanh_replay_required = true
+native_dummy_values_must_not_enter_native_prediction = true
+graph_ledgers_must_match = true
+online_head_ledgers_must_match = true
+
+[conditions]
+ordered = ["trace_head_v1", "native_head", "trace_independent_label", "frozen_trace_head", "rand", "ridge_trace", "ridge_native"]
+trace_head_v1 = "selected A3 passive trace features; true labels; online train updates"
+native_head = "native instantaneous 16-D features; identical online rule and budget"
+trace_independent_label = "trace features; independently randomized balanced train labels"
+frozen_trace_head = "zero head; no updates"
+rand = "deterministic independent random predictions; no updates"
+ridge_trace = "trace features; train-only ridge diagnostic"
+ridge_native = "native features; train-only ridge diagnostic"
+
+[ridge]
+alpha = 0.001
+standardization = "train_mean_and_population_sd_only"
+evaluation_fit_forbidden = true
+diagnostic_only = true
+
+[statistics]
+unit = "seed"
+exact_sign_flip_assignments = 1024
+alternative = "trace_head_v1_greater"
+predeclared_contrasts = ["trace_vs_frozen", "trace_vs_native", "trace_vs_independent_label"]
+multiple_testing = "Holm"
+adjusted_p_max_exclusive = 0.05
+bootstrap_replicates = 20000
+bootstrap_confidence = 0.95
+bootstrap_rng = "numpy.random.PCG64"
+
+[verification]
+per_example_evidence_schema = "experiment-000-online-trace-learning-evidence-v1"
+registered_stream_reconstruction_required = true
+equation_level_replay_required = true
+verifier_orchestrated_reconstruction_subprocesses = 2
+fresh_nonce_binding_required = true
+cross_run_coordinator_worker_identities_disjoint = true
+coordinator_worker_bindings_required = true
+terminal_sha256_sidecar_required = true
+post_persistence_input_recheck_required = true
+
+[gates.primary]
+d8_trace_mean_accuracy_min = 0.75
+d8_trace_seed_accuracy_min = 0.70
+d8_trace_seed_count_min = 8
+d8_advantage_vs_frozen_min = 0.20
+d8_advantage_vs_native_min = 0.10
+d8_advantage_vs_independent_label_min = 0.15
+d8_online_below_trace_ridge_max = 0.05
+
+[gates.robustness]
+d4_trace_mean_accuracy_min = 0.75
+d16_trace_mean_accuracy_min = 0.65
+d4_d16_seed_accuracy_min = 0.60
+d4_d16_seed_count_min = 8
+d16_drop_from_d8_max = 0.15
+cue_removed_accuracy_min = 0.45
+cue_removed_accuracy_max = 0.55
+chance_accuracy_min = 0.45
+chance_accuracy_max = 0.55
+
+[output]
+directory = "artifacts/experiment_000/online_trace_learning"
+primary = "artifacts/experiment_000/online_trace_learning/custom_seeds_80_89_full.json"
+rerun = "artifacts/experiment_000/online_trace_learning/custom_seeds_80_89_full_rerun.json"
+determinism = "artifacts/experiment_000/online_trace_learning/DETERMINISM_VERIFICATION.json"
+scratch_directory = "artifacts/scratch/experiment_000_online_trace_learning"
+report_sidecar_algorithm = "sha256"
+
+[decision]
+pass_terminal = "LEARNING_RESULT_PASS"
+fail_terminal_prefix = "LEARNING_RESULT_FAIL:"
+smoke_terminal = "SMOKE_NONSELECTING"
+separate_process_rerun_required = true
+canonical_payload_equality_required = true

@@ -1,0 +1,65 @@
+[protocol]
+name = "experiment_000_trace_head_alignment"
+version = "trace-head-l1-v1"
+schema_version = "experiment-000-trace-head-l1-v1"
+protocol_path = "docs/EXPERIMENT_000_TRACE_HEAD_ALIGNMENT_PROTOCOL.md"
+scope = "standalone_selected_trace_head_exact_alignment"
+claim = "head_alignment_only_not_recurrent_temporal_credit"
+
+[a3_prerequisite]
+required_protocol_version = "readout-trace-v1a3"
+resource_invalid_protocol_versions = ["readout-trace-v1a2"]
+required_registered_seeds = [105, 106, 107, 108, 109]
+required_phase_count = 7
+required_terminal_prefix = "SELECTED:"
+no_selection_allowed = false
+phase_sequence_path = "artifacts/experiment_000/readout_trace_a3/PHASE_SEQUENCE.json"
+primary_path = "artifacts/experiment_000/readout_trace_a3/custom_seeds_105_109_pairs_100.json"
+rerun_path = "artifacts/experiment_000/readout_trace_a3/custom_seeds_105_109_pairs_100_rerun.json"
+determinism_path = "artifacts/experiment_000/readout_trace_a3/DETERMINISM_VERIFICATION.json"
+
+[execution]
+enabled = true
+official_seeds = [75, 76, 77, 78, 79]
+episodes_per_seed = 32
+noise_events = 8
+data_split_namespace = "train"
+target_encoding = "cue_0=-1,cue_1=+1"
+feature_dimension = 16
+feature_order = "lexical_output_edge_id"
+required_independent_runs = 2
+confirmatory_seeds_allowed = false
+
+[head]
+activation = "tanh"
+initial_theta = 0.0
+loss = "0.5*(y-q)^2"
+analytic_descent_direction = "(y-q)*(1-q^2)*z"
+learning_rate = 0.5
+normalizer = "max(1,||z||^2)"
+element_update_clip = 0.05
+theta_clip = 3.0
+
+[finite_difference]
+method = "central"
+epsilon = 1e-6
+coordinates_per_case = 16
+absolute_tolerance = 1e-8
+relative_tolerance = 1e-6
+direction_cosine_min = 0.999999
+positive_dot_required = true
+case_pass_fraction = 1.0
+coordinate_pass_fraction = 1.0
+
+[invariants]
+topology_unchanged = true
+all_graph_weights_unchanged = true
+recurrent_weights_unchanged = true
+trace_read_only_to_head = true
+
+[artifacts]
+primary = "artifacts/experiment_000/trace_head_alignment/alignment_seeds_75_79_episodes_32.json"
+primary_sidecar = "artifacts/experiment_000/trace_head_alignment/alignment_seeds_75_79_episodes_32.sha256"
+rerun = "artifacts/experiment_000/trace_head_alignment/alignment_seeds_75_79_episodes_32_rerun.json"
+rerun_sidecar = "artifacts/experiment_000/trace_head_alignment/alignment_seeds_75_79_episodes_32_rerun.sha256"
+determinism = "artifacts/experiment_000/trace_head_alignment/DETERMINISM_VERIFICATION.json"

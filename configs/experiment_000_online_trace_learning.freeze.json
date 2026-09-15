@@ -1,0 +1,156 @@
+{
+  "created_utc": "2026-09-03T02:38:28.024886Z",
+  "entry_points": [
+    "src/adaptive_learning_substrate/__init__.py",
+    "src/adaptive_learning_substrate/experiment_000_online_trace_learning.py"
+  ],
+  "official_artifacts_absent_at_creation": true,
+  "protocol_name": "experiment_000_online_trace_learning",
+  "protocol_version": "trace-head-l1-v1",
+  "record_sha256": "fa76033578322c2d64976418620f73aae76ee9f4044e3192a8e363e8d811a5be",
+  "recorded_before_official_metrics": true,
+  "schema_version": "experiment-000-online-trace-learning-freeze-v1",
+  "scientific_import_closure": [
+    "src/adaptive_learning_substrate/__init__.py",
+    "src/adaptive_learning_substrate/environments.py",
+    "src/adaptive_learning_substrate/events.py",
+    "src/adaptive_learning_substrate/experiment000_data.py",
+    "src/adaptive_learning_substrate/experiment_000.py",
+    "src/adaptive_learning_substrate/experiment_000_memory_probe.py",
+    "src/adaptive_learning_substrate/experiment_000_online_trace_learning.py",
+    "src/adaptive_learning_substrate/experiment_000_readout_trace_a3.py",
+    "src/adaptive_learning_substrate/experiment_000_slow_state.py",
+    "src/adaptive_learning_substrate/experiment_000_trace_head_alignment.py",
+    "src/adaptive_learning_substrate/graph.py",
+    "src/adaptive_learning_substrate/learning.py",
+    "src/adaptive_learning_substrate/readout_trace_recurrent.py",
+    "src/adaptive_learning_substrate/recurrent.py",
+    "src/adaptive_learning_substrate/slow_state_recurrent.py"
+  ],
+  "source_manifest": {
+    "bundle_sha256": "ed669c7bbf531f18b759b8c6cbb3b1eb2f0fe670e0daf55a1b0a87fbfee7b8be",
+    "files": [
+      {
+        "bytes": 10946,
+        "path": "docs/EXPERIMENT_000_ONLINE_TRACE_LEARNING_PROTOCOL.md",
+        "sha256": "3a2f8d72368e5982a4d62d7a8e2940bc4646d66d55f8f77d5a56ba796c3556fe"
+      },
+      {
+        "bytes": 6411,
+        "path": "configs/experiment_000_online_trace_learning.toml",
+        "sha256": "3eb766c2bc931e44db0df3979563fdda6ce38b33ae21c304bd1ad65a8d709021"
+      },
+      {
+        "bytes": 48059,
+        "path": "tests/test_experiment_000_online_trace_learning.py",
+        "sha256": "434740c55bf4d2d9708d775a76da5a16a22df34cb74a77544351966adbb50ebd"
+      },
+      {
+        "bytes": 22204,
+        "path": "docs/EXPERIMENT_000_READOUT_TRACE_A3_PROTOCOL.md",
+        "sha256": "cb023552d50d568c3fe1e44c40038b064c275b513785c26d8693efa21c666963"
+      },
+      {
+        "bytes": 16832,
+        "path": "configs/experiment_000_readout_trace_a3.toml",
+        "sha256": "f1ca8047c7f5d559a4b6ac3888278d867826227917436af6f5873b6f4cfe0282"
+      },
+      {
+        "bytes": 62852,
+        "path": "tests/test_experiment_000_readout_trace_a3.py",
+        "sha256": "2a2b824ffaf581739aaa95adc37118d54818aa70af7fe27a0c6a43e29eace65e"
+      },
+      {
+        "bytes": 5896,
+        "path": "docs/EXPERIMENT_000_TRACE_HEAD_ALIGNMENT_PROTOCOL.md",
+        "sha256": "570c4eb17a00cf8fc79ad6a87990d9249bef5eee9e22a79eabd38d02b39235a8"
+      },
+      {
+        "bytes": 2398,
+        "path": "configs/experiment_000_trace_head_alignment.toml",
+        "sha256": "7e7af68a4a4df04bd50d48e4b667aeb092e3df1b656447986e9ca9a28aaddfaa"
+      },
+      {
+        "bytes": 19373,
+        "path": "tests/test_experiment_000_trace_head_alignment.py",
+        "sha256": "e985b25bc5eddd8bb6735c0da8bfa690658f026e9155ee152cc71bb3bcfcfb0a"
+      },
+      {
+        "bytes": 749,
+        "path": "src/adaptive_learning_substrate/__init__.py",
+        "sha256": "964b747b8f4d62dd37e24856f94d9861edb4e90592ab0625a1fb2c9d861c2758"
+      },
+      {
+        "bytes": 7718,
+        "path": "src/adaptive_learning_substrate/environments.py",
+        "sha256": "866d19787839af5d76b26f2dda82749de2ec21943776c4a1b92050b13e649bf9"
+      },
+      {
+        "bytes": 3192,
+        "path": "src/adaptive_learning_substrate/events.py",
+        "sha256": "70837071b0f7cb656e2c168a6c9bf2ae25d34ec3ae4e1b263caafedaac2304df"
+      },
+      {
+        "bytes": 19632,
+        "path": "src/adaptive_learning_substrate/experiment000_data.py",
+        "sha256": "805dcdddf2678fce1a5f1f9d0eac17c7ddceada2651eb667e45cdb65fd1522b4"
+      },
+      {
+        "bytes": 36978,
+        "path": "src/adaptive_learning_substrate/experiment_000.py",
+        "sha256": "ec3992ce61ec66a2039ae1d3d20d8d5d528a5b65f7ece146fbf2b269d107f27a"
+      },
+      {
+        "bytes": 20111,
+        "path": "src/adaptive_learning_substrate/experiment_000_memory_probe.py",
+        "sha256": "94492d0e8541b3e4f0ae757624dd411626358c9f1275b42df629752a38245455"
+      },
+      {
+        "bytes": 208790,
+        "path": "src/adaptive_learning_substrate/experiment_000_online_trace_learning.py",
+        "sha256": "2eb4407603c2565c6b3845e8f0d7d1522697fc7f30dc0f4a562e5c070b7f7f23"
+      },
+      {
+        "bytes": 232180,
+        "path": "src/adaptive_learning_substrate/experiment_000_readout_trace_a3.py",
+        "sha256": "99403c6706c5e7cdb56f518a696ba9e9cf5101f048e810cee99b07eb828cfdc5"
+      },
+      {
+        "bytes": 111458,
+        "path": "src/adaptive_learning_substrate/experiment_000_slow_state.py",
+        "sha256": "c9355018e51fb6ea444be2b445411b6df24445cac6b829fef5ccd91f23b2e959"
+      },
+      {
+        "bytes": 73829,
+        "path": "src/adaptive_learning_substrate/experiment_000_trace_head_alignment.py",
+        "sha256": "9e1c0d9516935718b410b7bb260b28a29fcce6df562f3c6aacd059e8caff6ba3"
+      },
+      {
+        "bytes": 18033,
+        "path": "src/adaptive_learning_substrate/graph.py",
+        "sha256": "eb2f0bd500e510419e71478e22ee2e6e7b73918c2133a51f7175c9eb5067f5bd"
+      },
+      {
+        "bytes": 2117,
+        "path": "src/adaptive_learning_substrate/learning.py",
+        "sha256": "5291d924b0c7fe579c5ae7adf411e6bd9bb2fc0b13e2da285830922b0f256e8a"
+      },
+      {
+        "bytes": 13608,
+        "path": "src/adaptive_learning_substrate/readout_trace_recurrent.py",
+        "sha256": "979743ffe7b00a657c32b62fd3b0d0321bd782e4f8fb7fd7275d3a8b2bd7baec"
+      },
+      {
+        "bytes": 36873,
+        "path": "src/adaptive_learning_substrate/recurrent.py",
+        "sha256": "b56216abd19f5d3aaf935b6e58831c54ccf078ce4e4c7ef80e006b04ca6231b3"
+      },
+      {
+        "bytes": 14275,
+        "path": "src/adaptive_learning_substrate/slow_state_recurrent.py",
+        "sha256": "af8e084acf1f7334fbe36c39f3a59e23d109c9c6aa34f45c596db169025da7f9"
+      }
+    ]
+  },
+  "status": "FROZEN_PRE_OFFICIAL"
+}

@@ -1,0 +1,12 @@
+# Exact environment used for the 2026-09-04 evidence-integrity repair.
+# Install with: python -m pip install -r requirements-dev.lock
+numpy==2.5.1
+threadpoolctl==3.6.0
+pytest==9.1.1
+ruff==0.16.2
+colorama==0.4.6
+iniconfig==2.3.0
+packaging==26.0
+pluggy==1.6.0
+Pygments==2.20.0
+setuptools==83.0.0

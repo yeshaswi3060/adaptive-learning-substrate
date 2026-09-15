@@ -1,0 +1,343 @@
+protocol_version = "experiment-000-lwoh-l1-v1"
+protocol_path = "docs/EXPERIMENT_000_LWOH_L1_PROTOCOL.md"
+protocol_sha256 = "42e237add4eac9ca24a6d5781efefce6367f8c9f2c4c4065b324a1703706dc7e"
+status = "prospective_conditional_contingency"
+claim_level = "custom_seed_development_only"
+
+[trigger]
+activate_only_on_a2_terminal = "NO_SELECTION"
+cancel_on_a2_terminal_prefix = "SELECTED:"
+cancel_status = "CANCELLED_A2_SELECTED"
+invalid_or_incomplete_a2_action = "repair_a2_do_not_activate_lwoh"
+design_may_read_a2_metric_values = false
+design_frozen_before_any_a2_official_metric = true
+required_a2_protocol_sha256 = "9623c23efb586dc89351e2c19887cc25886db42f42a600247feb0c38dcb11484"
+required_a2_config_sha256 = "45e2f1450d57a62a9a62a8dd6ce8770da8751de4533f8338cd11acd95cbb3327"
+require_primary_sidecar = true
+require_rerun_sidecar = true
+require_separate_process = true
+require_canonical_payload_equality = true
+require_phase_and_source_integrity = true
+
+[seed_partition]
+admission = [90, 91, 92, 93, 94]
+learning = [95, 96, 97, 98, 99, 100, 101, 102, 103, 104]
+scratch = [9090, 9091]
+forbidden_development = [0, 1, 2, 3, 4]
+forbidden_alignment = [42, 43, 44, 45, 46]
+forbidden_memory_sweep = [50, 51, 52, 53, 54]
+forbidden_slow_state = [60, 61, 62, 63, 64]
+forbidden_invalid_a1 = [65, 66, 67, 68, 69]
+forbidden_a2 = [70, 71, 72, 73, 74]
+forbidden_a2_selected_branch = [75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89]
+forbidden_confirmatory = [1000, 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016, 1017, 1018, 1019]
+required_role = "custom"
+
+[graph]
+hidden_count = 64
+recurrent_in_degree = 8
+input_fan_out = 8
+output_fan_in = 16
+initial_weight_scale = 0.35
+edge_delay_ticks = 1
+query_readout_latency_ticks = 2
+activation = "tanh"
+emit_threshold = 0.001
+dtype = "float64"
+device = "cpu"
+autograd = false
+gpu = false
+ccf_calls = 0
+topology_frozen = true
+weights_frozen = true
+
+[memory]
+name = "local_write_once_hard_expiring_latch"
+condition = "write_once_ttl32"
+selected_nodes = "lexically_ordered_destinations_of_input_cue_edges"
+feature_dimension = 8
+state_floats = 8
+state_ticks = 8
+state_bits = 8
+initial_m = 0.0
+initial_kappa = 0
+initial_b = 0
+gate_equation = "g_i(t)=1-b_i"
+value_equation = "m_i=clip(g_i(t)*a_i(t)+(1-g_i(t))*m_i,-1,+1)"
+tick_equation = "kappa_i=g_i(t)*t+(1-g_i(t))*kappa_i"
+written_equation = "b_i=1"
+effective_equation = "z_i(T)=m_i iff b_i=1 and 0<=T-kappa_i<=32 else +0.0"
+hard_horizon_ticks = 32
+maximum_official_query_age_ticks = 18
+horizon_derivation = "smallest_power_of_two_strictly_above_18"
+touch_only_on_real_hidden_evaluation = true
+read_only_at_query = true
+enters_recurrent_dynamics = false
+creates_events_or_messages = false
+crosses_episode_boundary = false
+
+[admission]
+seeds = [90, 91, 92, 93, 94]
+distractors = 8
+pairs_per_split = 100
+counterfactual_cues = [-1, 1]
+ridge_alpha = 0.001
+candidate_feature = "lwoh_8d"
+native_feature = "latest_activation_same_8_nodes"
+candidate_output_equation = "tanh(sum_i input_cue_weight_i*z_i)"
+native_output = "ordinary_forced_output"
+candidate_grid_size = 1
+online_learning = false
+zero_guard = "positive_over_zero_passes_ratio_by_cross_multiplication;zero_over_zero_fails"
+terminal_pass = "LWOH_ADMITTED:write_once_ttl32"
+terminal_fail_prefix = "LWOH_ADMISSION_FAIL:"
+require_primary_and_rerun = true
+require_canonical_payload_equality = true
+
+[admission.gates]
+A01_median_c_multiple_min = 3.0
+A02_seed_c_multiple_min = 3.0
+A02_seed_count_min = 4
+A03_median_ratio_min = 0.50
+A04_median_ratio_multiple_min = 3.0
+A05_seed_ratio_multiple_min = 3.0
+A05_seed_count_min = 4
+A06_median_ridge_eval_accuracy_min = 0.70
+A07_median_output_cue_delta_to_sd_min = 0.50
+A08_split_event_ratio_max = 1.10
+A08_split_forward_touch_ratio_max = 1.10
+A08_episode_event_ratio_max = 1.15
+A08_episode_forward_touch_ratio_max = 1.15
+A09_blank_tail_start_tick = 193
+A09_blank_tail_end_tick = 256
+A09_hidden_emissions_required = 0
+A09_effective_state_abs_max = 0.0
+A09_wake_feature_half_difference_l2_max = 0.001
+A09_wake_output_half_difference_abs_max = 0.001
+A10_all_integrity_required = true
+
+[learner]
+condition = "lwoh_head"
+parameters = 8
+bias_parameters = 0
+initial_theta = 0.0
+prediction_equation = "q=tanh(theta^T*z)"
+tie_prediction = 1
+loss_equation = "0.5*(y-q)^2"
+normalizer_equation = "max(1,||z||^2)"
+learning_rate = 0.5
+delta_coordinate_clip = 0.05
+theta_coordinate_clip = 3.0
+target_encoding = "bipolar_-1_+1"
+target_available_before_prediction = false
+passes_per_training_stream = 1
+replay = false
+
+[head_alignment_tests]
+coordinates = 8
+central_difference_absolute_tolerance = 1e-8
+central_difference_relative_tolerance = 1e-6
+cosine_min = 0.999999
+positive_descent_dot_fraction = 1.0
+official_task_metrics = false
+
+[conditions]
+ordered = ["lwoh_head", "latest_head", "lwoh_independent_label", "frozen_lwoh_head", "rand", "ridge_lwoh", "ridge_latest", "visible_cue_hold"]
+primary_compute_matched_baseline = "latest_head"
+latest_gate_equation = "g_i(t)=1"
+independent_labels_exactly_balanced = true
+frozen_theta = 0.0
+ridge_alpha = 0.001
+visible_cue_hold_role = "transparent_nonlearning_task_ceiling"
+visible_cue_hold_in_superiority_comparisons = false
+
+[data]
+train_cell = "d8_clean_train"
+train_distractors = 8
+train_examples = 512
+all_streams_exactly_balanced = true
+cell_namespaced_rng = true
+rng = "numpy.random.PCG64"
+seed_derivation = "first_128_bits_SHA256(protocol_version|master_seed|cell|split|purpose)"
+analysis_seed = 2026090302
+target = "cue"
+target_stored_separately = true
+
+[[data.eval_cells]]
+name = "d8_clean_eval"
+distractors = 8
+cue_visible = true
+examples = 512
+
+[[data.eval_cells]]
+name = "d4_clean_eval"
+distractors = 4
+cue_visible = true
+examples = 256
+
+[[data.eval_cells]]
+name = "d16_clean_eval"
+distractors = 16
+cue_visible = true
+examples = 256
+
+[[data.eval_cells]]
+name = "d8_cue_removed_eval"
+distractors = 8
+cue_visible = false
+cue_event = "exact_empty_tick"
+examples = 256
+
+[scratch]
+seeds = [9090, 9091]
+train_examples_max = 8
+eval_examples_per_cell_max = 8
+canonical_paths_forbidden = true
+selecting = false
+
+[learning_gates.primary]
+P01_d8_mean_accuracy_min = 0.75
+P02_d8_seed_accuracy_min = 0.70
+P02_seed_count_min = 8
+P03_advantage_vs_frozen_min = 0.20
+P03_advantage_vs_latest_min = 0.10
+P03_advantage_vs_independent_label_min = 0.15
+P04_max_gap_below_ridge_lwoh = 0.05
+
+[learning_gates.statistics]
+independent_unit = "seed"
+contrasts = ["lwoh_minus_frozen", "lwoh_minus_latest", "lwoh_minus_independent_label"]
+exact_sign_flip_assignments = 1024
+one_sided = true
+holm_family_size = 3
+holm_adjusted_p_strict_max = 0.05
+bootstrap_replicates = 20000
+bootstrap_seed = 2026090302
+confidence_level = 0.95
+all_lower_bounds_strictly_positive = true
+
+[learning_gates.robustness]
+R01_d4_mean_accuracy_min = 0.75
+R01_d16_mean_accuracy_min = 0.65
+R02_seed_accuracy_min = 0.60
+R02_seed_count_min = 8
+R03_d16_drop_from_d8_max = 0.15
+R04_cue_removed_accuracy_min = 0.45
+R04_cue_removed_accuracy_max = 0.55
+R05_independent_label_accuracy_min = 0.45
+R05_independent_label_accuracy_max = 0.55
+R05_frozen_accuracy_min = 0.45
+R05_frozen_accuracy_max = 0.55
+
+[control_integrity]
+visible_cue_hold_clean_accuracy = 1.0
+visible_cue_hold_removed_accuracy = 0.5
+training_updates_per_trainable_head = 512
+evaluation_updates = 0
+true_label_heads_must_change_from_zero = true
+prediction_before_target_reveal = true
+one_pass_no_replay = true
+
+[compute]
+worker_processes = 5
+parent_blas_threads = 1
+worker_blas_threads = 1
+ordered_seed_results = true
+require_unique_fresh_processes = true
+same_native_forwards = true
+same_event_and_activation_identities = true
+same_graph_edge_touches = true
+same_observer_kernel_calls = true
+same_state_bytes = true
+same_feature_reads = 8
+same_head_parameters = 8
+same_head_dot_product_coordinates = 8
+same_training_update_coordinates = 8
+report_wall_time = true
+report_peak_memory = true
+
+[integrity]
+finite_values = true
+memory_bound_abs = 1.0
+write_once_per_selected_unit = true
+hard_expiry_required = true
+episode_reset_required = true
+lexical_feature_order_required = true
+feature_dimension = 8
+native_event_equality = true
+native_activation_equality = true
+topology_unchanged = true
+all_edge_fields_unchanged = true
+weights_unchanged = true
+recurrent_weights_unchanged = true
+spectral_radius_unchanged = true
+operator_norm_unchanged = true
+structural_events = 0
+credit_packets = 0
+confirmatory_seeds = 0
+cell_sample_rng_disjointness = true
+ledger_reconciliation = true
+raw_prediction_and_target_hashes = true
+source_check_at_start = true
+source_check_before_persistence = true
+source_check_at_end = true
+
+[persistence]
+canonical_directory = "artifacts/experiment_000/lwoh_l1"
+freeze_record = "artifacts/experiment_000/lwoh_l1/CONTINGENCY_FREEZE_RECORD.json"
+phase_ledger = "artifacts/experiment_000/lwoh_l1/PHASE_LEDGER.json"
+admission_primary = "artifacts/experiment_000/lwoh_l1/admission_seeds_90_94_pairs_100.json"
+admission_primary_sidecar = "artifacts/experiment_000/lwoh_l1/admission_seeds_90_94_pairs_100.sha256"
+admission_rerun = "artifacts/experiment_000/lwoh_l1/admission_seeds_90_94_pairs_100_rerun.json"
+admission_rerun_sidecar = "artifacts/experiment_000/lwoh_l1/admission_seeds_90_94_pairs_100_rerun.sha256"
+admission_verification = "artifacts/experiment_000/lwoh_l1/ADMISSION_DETERMINISM_VERIFICATION.json"
+learning_primary = "artifacts/experiment_000/lwoh_l1/learning_seeds_95_104.json"
+learning_primary_sidecar = "artifacts/experiment_000/lwoh_l1/learning_seeds_95_104.sha256"
+learning_rerun = "artifacts/experiment_000/lwoh_l1/learning_seeds_95_104_rerun.json"
+learning_rerun_sidecar = "artifacts/experiment_000/lwoh_l1/learning_seeds_95_104_rerun.sha256"
+learning_verification = "artifacts/experiment_000/lwoh_l1/DETERMINISM_VERIFICATION.json"
+canonical_json = true
+binding_sha256_sidecars = true
+strict_regeneration_verifier = true
+
+[source_freeze]
+required_before_official_metric = true
+paths = [
+  "docs/EXPERIMENT_000_LWOH_L1_PROTOCOL.md",
+  "configs/experiment_000_lwoh_l1.toml",
+  "src/adaptive_learning_substrate/experiment_000_lwoh_l1.py",
+  "tests/test_experiment_000_lwoh_l1.py",
+  "src/adaptive_learning_substrate/recurrent.py",
+  "src/adaptive_learning_substrate/experiment000_data.py",
+  "pyproject.toml",
+]
+source_drift_terminal_prefix = "INVALID_PROCEDURE_SOURCE_DRIFT:"
+
+[phase_order]
+steps = ["freeze", "tests", "scratch_smoke", "scratch_verification", "admission_primary", "admission_rerun", "admission_verification", "learning_primary", "learning_rerun", "learning_verification"]
+reject_out_of_order = true
+
+[commands]
+scratch = "python -m adaptive_learning_substrate.experiment_000_lwoh_l1 --phase scratch --seeds 9090 9091 --workers 2 --output artifacts/experiment_000/lwoh_l1_scratch/smoke.json"
+admission_primary = "python -m adaptive_learning_substrate.experiment_000_lwoh_l1 --phase admission --seeds 90 91 92 93 94 --workers 5 --output artifacts/experiment_000/lwoh_l1/admission_seeds_90_94_pairs_100.json"
+admission_rerun = "python -m adaptive_learning_substrate.experiment_000_lwoh_l1 --phase admission-rerun --seeds 90 91 92 93 94 --workers 5 --output artifacts/experiment_000/lwoh_l1/admission_seeds_90_94_pairs_100_rerun.json"
+learning_primary = "python -m adaptive_learning_substrate.experiment_000_lwoh_l1 --phase learning --seeds 95 96 97 98 99 100 101 102 103 104 --workers 5 --output artifacts/experiment_000/lwoh_l1/learning_seeds_95_104.json"
+learning_rerun = "python -m adaptive_learning_substrate.experiment_000_lwoh_l1 --phase learning-rerun --seeds 95 96 97 98 99 100 101 102 103 104 --workers 5 --output artifacts/experiment_000/lwoh_l1/learning_seeds_95_104_rerun.json"
+
+[decision]
+pass_terminal = "LWOH_LEARNING_PASS"
+admission_fail_prefix = "LWOH_ADMISSION_FAIL:"
+learning_fail_prefix = "LWOH_LEARNING_FAIL:"
+score_before = 21
+score_if_all_gates_pass = 25
+score_if_any_gate_fails = 21
+partial_score = false
+delayed_recurrent_points_delta = 2
+robustness_points_delta = 2
+other_category_points_delta = 0
+authorizes_confirmatory = false
+authorizes_experiment_001 = false
+supports_ccf_claim = false
+supports_novelty_claim = false
+supports_efficiency_claim = false
+supports_world_competitiveness_claim = false

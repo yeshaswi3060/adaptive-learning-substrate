@@ -1,0 +1,13 @@
+[environment]
+length = 5
+credit_delay = 8
+correct_actions = [0, 1, 0, 1, 0]
+seed = 0
+
+[graph]
+trace_decay = 0.97
+learning_rate = 0.01
+weight_clip = 3.0
+max_update = 0.05
+trace_horizon = 32
+route_gain = 0.90

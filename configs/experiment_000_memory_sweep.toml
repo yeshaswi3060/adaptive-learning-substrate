@@ -1,0 +1,169 @@
+# Preregistered architecture-only, no-learning recurrent memory sweep.
+# Custom seeds only; CCF-v0/C000.1 remains unchanged and is never called.
+
+[protocol]
+name = "experiment_000_recurrent_memory_strength_sweep"
+version = "memory-sweep-v1-a1"
+mechanism = "CCF-v0"
+implementation_revision = "C000.1"
+scope = "custom_seed_architecture_diagnostic"
+confirmatory = false
+architecture_change = "uniform_recurrent_weight_rescaling_only"
+result_is_mechanism_pass = false
+status = "amended_preflight_frozen_before_official_run"
+amendment = "A1"
+amendment_date = "2026-09-02"
+
+[preflight_amendment]
+identifier = "A1"
+scratch_diagnostics_seen = true
+scratch_pairs_per_split = 2
+scratch_can_select = false
+official_smoke_or_full_seen_at_freeze = false
+reason = "detect_autonomous_blank_tail_and_require_absolute_cue_growth"
+
+[execution]
+enabled = true
+required_seed_role = "custom"
+seeds = [50, 51, 52, 53, 54]
+pairs_per_split = 100
+smoke_pairs_per_split = 2
+condition_order = ["native", "rho_0_60", "rho_0_80", "rho_0_95", "rho_1_05"]
+confirmatory_seeds_allowed = false
+required_identical_full_runs = 2
+
+[data]
+noise_events = 8
+train_eval_substreams_disjoint = true
+same_noise_within_cue_pair = true
+same_streams_across_conditions = true
+counterfactual_cues = [0, 1]
+terminal_feedback_delivered = false
+query_event_tick = 9
+forced_output_tick = 11
+
+[graph]
+hidden_count = 64
+recurrent_in_degree = 8
+input_fan_out = 8
+output_fan_in = 16
+edge_delay_ticks = 1
+query_readout_latency_ticks = 2
+initial_weight_scale = 0.35
+activation = "tanh"
+float_type = "float64"
+emit_threshold = 1e-3
+topology_frozen = true
+
+[ccf_inert_provenance]
+learning_enabled = false
+apply_supervised_credit_allowed = false
+learning_rate = 0.01
+trace_decay = 0.97
+route_gain = 0.90
+credit_limit = 1.0
+max_update = 0.05
+weight_clip = 3.0
+trace_horizon = 32
+hop_limit = 16
+epsilon_weight = 1e-12
+epsilon_message = 1e-12
+epsilon_route = 1e-12
+credit_minimum = 1e-8
+
+[intervention]
+native_condition = "native"
+target_conditions = ["rho_0_60", "rho_0_80", "rho_0_95", "rho_1_05"]
+spectral_radius_targets = [0.60, 0.80, 0.95, 1.05]
+scale_edge_kind = "recurrent"
+scale_factor_formula = "target_radius/native_radius"
+minimum_native_radius = 1e-15
+radius_absolute_tolerance = 1e-10
+radius_relative_tolerance = 1e-10
+preserve_recurrent_mask = true
+preserve_recurrent_signs = true
+preserve_nonrecurrent_weights_bitwise = true
+preserve_topology = true
+require_scaled_weights_within_weight_clip = true
+scaled_absolute_weight_max = 3.0
+record_recurrent_operator_2_norm = true
+record_operator_norm_to_radius_ratio = true
+operator_norm_to_radius_field = "nonnormality_ratio"
+operator_ratio_denominator_epsilon = 1e-15
+hard_stability_gate = "both_polarity_blank_tail"
+
+[probe]
+feature_definition = "ordered_query_root_output_edge_message_values_absent_is_zero"
+feature_order = "lexical_edge_id"
+ridge_alpha = 1e-3
+ratio_denominator_epsilon = 1e-15
+native_multiplier_denominator_epsilon = 1e-15
+activity_ledger_field = "emitted_unit_events"
+secondary_activity_ledger_field = "forward_edge_touches"
+record_hidden_emission_count = true
+hidden_emission_density_denominator = 704
+allow_sparse_efficiency_claim = false
+record_pair_rows = true
+record_array_hashes = true
+require_all_finite = true
+require_zero_credit_packets = true
+require_zero_weight_writes = true
+require_weights_unchanged_during_probe = true
+
+[stability_assay]
+enabled = true
+cue_tick = 0
+cue_channel = "cue"
+cue_polarities = [-1.0, 1.0]
+blank_ticks = 256
+blank_step = "step_empty_mapping"
+count_node_kind = "hidden"
+record_hidden_events_each_tick = true
+record_vector_hash = true
+record_last_nonzero_tick = true
+final_window_first_tick = 193
+final_window_last_tick = 256
+required_final_window_hidden_emissions = 0
+require_every_seed_condition_and_polarity = true
+require_topology_unchanged = true
+require_weights_unchanged = true
+
+[selection]
+full_result_only = true
+smoke_can_select = false
+aggregation = "median_across_seeds"
+evaluation_cue_feature_delta_rms_vs_native_multiplier_min = 3.0
+within_seed_absolute_cue_threefold_improvement_count_min = 4
+evaluation_cue_to_noise_feature_ratio_min = 0.50
+evaluation_cue_to_noise_vs_native_multiplier_min = 3.0
+within_seed_threefold_improvement_count_min = 4
+evaluation_ridge_accuracy_min = 0.70
+evaluation_output_cue_delta_to_sd_min = 0.50
+task_total_event_activity_vs_native_max = 1.10
+max_matched_episode_event_activity_vs_native_max = 1.15
+blank_tail_final_64_hidden_emissions_required = 0
+require_all_invariants_every_seed_and_split = true
+native_is_selectable = false
+choice_rule = "lowest_target_satisfying_all_gates"
+no_passing_candidate_status = "NO_SELECTION"
+no_selection_advances_candidate = false
+
+[hashing]
+algorithm = "sha256"
+canonical_json = "sorted_keys_compact_separators_ascii_allow_nan_false"
+array_encoding = "shape_plus_contiguous_little_endian_float64_bytes"
+exclude_from_deterministic_payload = ["runtime", "timestamps", "absolute_paths", "machine_text"]
+
+[output]
+directory = "artifacts/experiment_000/memory_sweep"
+primary_report = "custom_seeds_50_54_pairs_100.json"
+rerun_report = "custom_seeds_50_54_pairs_100_rerun.json"
+primary_report_hash_sidecar = "custom_seeds_50_54_pairs_100.sha256"
+rerun_report_hash_sidecar = "custom_seeds_50_54_pairs_100_rerun.sha256"
+write_pair_rows = true
+write_condition_rows = true
+write_stability_rows = true
+write_hidden_density = true
+write_forward_edge_touches = true
+write_provenance = true
+write_gate_decisions = true
