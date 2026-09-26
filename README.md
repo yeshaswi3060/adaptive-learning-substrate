@@ -1,5 +1,9 @@
 # Adaptive Learning Substrate
 
+**New to the project?** Start with the illustrated
+[project guide](docs/PROJECT_GUIDE.md) for the repository map, the research
+question, what has failed, and the next experiment.
+
 ## Mission
 
 Develop and experimentally validate a fundamentally new learning mechanism that can learn continuously from experience, create or reorganize its own computational structure, preserve earlier knowledge, and operate efficiently without Transformer attention or global end-to-end backpropagation.
